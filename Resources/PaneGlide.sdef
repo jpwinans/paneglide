@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dictionary SYSTEM "file://localhost/System/Library/DTDs/sdef.dtd">
+<dictionary title="PaneGlide"><suite name="PaneGlide Suite" code="SzUp" description="Window positioning in logical macOS points.">
+<enumeration name="action" code="SUac">
+<enumerator name="Left" code="SUlt"><cocoa string-value="left"/></enumerator>
+<enumerator name="Right" code="SUrt"><cocoa string-value="right"/></enumerator>
+<enumerator name="Up" code="SUup"><cocoa string-value="up"/></enumerator>
+<enumerator name="Down" code="SUdn"><cocoa string-value="down"/></enumerator>
+<enumerator name="Upper Left" code="SUul"><cocoa string-value="upperLeft"/></enumerator>
+<enumerator name="Upper Right" code="SUur"><cocoa string-value="upperRight"/></enumerator>
+<enumerator name="Lower Left" code="SUll"><cocoa string-value="lowerLeft"/></enumerator>
+<enumerator name="Lower Right" code="SUlr"><cocoa string-value="lowerRight"/></enumerator>
+<enumerator name="Full Screen" code="SUfs"><cocoa string-value="maximize"/></enumerator>
+<enumerator name="Center" code="SUcr"><cocoa string-value="center"/></enumerator>
+<enumerator name="Prev Monitor" code="SUpm"><cocoa string-value="previousMonitor"/></enumerator>
+<enumerator name="Next Monitor" code="SUnm"><cocoa string-value="nextMonitor"/></enumerator>
+<enumerator name="SnapBack" code="SUsb"><cocoa string-value="snapBack"/></enumerator>
+<enumerator name="Move Left" code="SAlt"><cocoa string-value="moveLeft"/></enumerator>
+<enumerator name="Move Right" code="SArt"><cocoa string-value="moveRight"/></enumerator>
+<enumerator name="Move Up" code="SAup"><cocoa string-value="moveUp"/></enumerator>
+<enumerator name="Move Down" code="SAdn"><cocoa string-value="moveDown"/></enumerator>
+<enumerator name="Move Upper Left" code="SMul"><cocoa string-value="moveUpperLeft"/></enumerator>
+<enumerator name="Move Upper Right" code="SMur"><cocoa string-value="moveUpperRight"/></enumerator>
+<enumerator name="Move Lower Left" code="SMll"><cocoa string-value="moveLowerLeft"/></enumerator>
+<enumerator name="Move Lower Right" code="SMlr"><cocoa string-value="moveLowerRight"/></enumerator>
+<enumerator name="Move Center" code="SMcr"><cocoa string-value="moveCenter"/></enumerator>
+<enumerator name="Third Left" code="STlt"><cocoa string-value="thirdLeft"/></enumerator>
+<enumerator name="Third Center" code="STcr"><cocoa string-value="thirdCenter"/></enumerator>
+<enumerator name="Third Right" code="STrt"><cocoa string-value="thirdRight"/></enumerator>
+<enumerator name="Third Upper" code="STup"><cocoa string-value="thirdUpper"/></enumerator>
+<enumerator name="Third Middle" code="STmd"><cocoa string-value="thirdMiddle"/></enumerator>
+<enumerator name="Third Lower" code="STlw"><cocoa string-value="thirdLower"/></enumerator>
+</enumeration>
+<class name="application" code="capp"><cocoa class="NSApplication"/>
+<property name="name" code="pnam" type="text" access="r"><cocoa key="paneGlideName"/></property>
+<property name="version" code="vers" type="text" access="r"><cocoa key="paneGlideVersion"/></property>
+<property name="frontmost" code="pisf" type="boolean" access="r"><cocoa key="isActive"/></property>
+<property name="enabled" code="enbl" type="boolean"><cocoa key="paneGlideEnabled"/></property>
+</class>
+<command name="quit" code="aevtquit"><cocoa class="NSQuitCommand"/></command>
+<command name="do action" code="SzUpDoAc"><cocoa class="SUCommand"/>
+<direct-parameter type="action"/>
+<parameter name="on monitor" code="SuMi" type="integer" optional="yes"><cocoa key="monitor"/></parameter>
+<result><type type="real" list="yes"/></result>
+</command>
+<command name="send to monitor" code="SzUpStmo"><cocoa class="SUCommand"/>
+<direct-parameter type="integer"/>
+<result><type type="real" list="yes"/></result>
+</command>
+<command name="move to" code="SzUpMove"><cocoa class="SUCommand"/>
+<direct-parameter type="point"/>
+<parameter name="on monitor" code="SuMi" type="integer" optional="yes"><cocoa key="monitor"/></parameter>
+<result><type type="real" list="yes"/></result>
+</command>
+<command name="resize to" code="SzUpRsiz"><cocoa class="SUCommand"/>
+<direct-parameter type="point"/>
+<parameter name="on monitor" code="SuMi" type="integer" optional="yes"><cocoa key="monitor"/></parameter>
+<result><type type="real" list="yes"/></result>
+</command>
+<command name="move and resize to" code="SzUpMvRs"><cocoa class="SUCommand"/>
+<direct-parameter type="rectangle"/>
+<parameter name="on monitor" code="SuMi" type="integer" optional="yes"><cocoa key="monitor"/></parameter>
+<result><type type="real" list="yes"/></result>
+</command>
+<command name="fit to grid" code="SzUpFiGr"><cocoa class="SUCommand"/>
+<direct-parameter type="rectangle"/>
+<parameter name="on monitor" code="SuMi" type="integer" optional="yes"><cocoa key="monitor"/></parameter>
+<parameter name="grid size" code="SuGs" type="point" optional="yes"><cocoa key="gridSize"/></parameter>
+<result><type type="real" list="yes"/></result>
+</command>
+<command name="show menu" code="SzUpShMe"><cocoa class="SUCommand"/>
+</command>
+<command name="tile windows" code="SzUpTile"><cocoa class="SUCommand"/><parameter name="on monitor" code="SuMi" type="integer" optional="yes"><cocoa key="monitor"/></parameter><parameter name="all applications" code="SAll" type="boolean" optional="yes"><cocoa key="allApplications"/></parameter><result><type type="any" list="yes"/></result></command>
+<command name="cascade windows" code="SzUpCasc"><cocoa class="SUCommand"/><parameter name="on monitor" code="SuMi" type="integer" optional="yes"><cocoa key="monitor"/></parameter><parameter name="all applications" code="SAll" type="boolean" optional="yes"><cocoa key="allApplications"/></parameter><result><type type="any" list="yes"/></result></command>
+</suite></dictionary>
