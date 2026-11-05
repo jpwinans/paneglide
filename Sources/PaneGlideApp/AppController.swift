@@ -13,6 +13,8 @@ import PaneGlideCore
     var helpWindow: NSWindow?
     var helpModel: HelpModel?
     let setup = SetupProgress()
+    var practice = WindowPractice()
+    var practiceIssue: String? { practice.step == .moveLeft || practice.step == .restore ? actionError : nil }
     let hotkeys = GlobalHotkeys()
     let login = LoginItem(system: NativeLoginSystem())
     private var actionError: String?
@@ -81,6 +83,7 @@ import PaneGlideCore
         guard let raw = sender.representedObject as? String, let action = WindowAction(rawValue: raw) else { return }
         guard let capturedTarget else {
             actionError = WindowError.noWindow.localizedDescription
+            helpModel?.refresh()
             rebuildMenu()
             return
         }
@@ -88,10 +91,20 @@ import PaneGlideCore
     }
     func run(_ action: WindowAction, target: String? = nil) {
         do {
-            _ = try commands.execute(action, target: target, settings: store.settings)
+            let result = try commands.execute(action, target: target, settings: store.settings)
+            practice.receive(action, result: result)
             actionError = nil
         } catch { actionError = error.localizedDescription }
+        helpModel?.refresh()
         rebuildMenu()
+    }
+    func beginPractice() {
+        practice.begin(); actionError = nil
+        helpModel?.refresh()
+    }
+    func cancelPractice() {
+        practice.cancel()
+        helpModel?.refresh()
     }
     @objc func toggleShortcuts() {
         var value = store.settings; value.shortcutsEnabled.toggle()
@@ -146,6 +159,7 @@ import PaneGlideCore
     }
     func windowWillClose(_ notification: Notification) {
         if let window = notification.object as? NSWindow, window === helpWindow {
+            if practice.step == .moveLeft || practice.step == .restore { practice.cancel() }
             helpWindow = nil; helpModel = nil
         }
         if let window = notification.object as? NSWindow, window === preferencesWindow {

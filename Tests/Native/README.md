@@ -95,3 +95,10 @@ Record a temporary shortcut, cancel or revert it, and check that saved bindings
 remain intact. Check that opening Preferences from Help works and that Help remains usable offline. Login changes
 should reflect the macOS registration result. Do not revoke an everyday
 installation's permission just to exercise a fresh-user case.
+
+For the optional practice check, choose Try Left → SnapBack, then focus a normal
+fixture window and use Left. Return to Help to confirm “The window moved.” SnapBack
+on the same window must produce “Move and restore confirmed.” An unchanged window,
+a restore on another window, or a constrained/failed restore must not complete the
+check. Canceling it must leave normal SnapBack restoration available. Test with
+physical shortcuts and with menu actions; no synthetic key injection is required.

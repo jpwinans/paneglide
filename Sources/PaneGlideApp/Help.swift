@@ -11,6 +11,8 @@ import PaneGlideCore
     @Published var settings: AppSettings
     @Published var shortcutReadiness: ShortcutReadiness
     @Published var shortcutIssue: String?
+    @Published var practiceStep: WindowPractice.Step
+    @Published var practiceIssue: String?
     @Published var message = ""
     unowned let controller: AppController
 
@@ -19,11 +21,13 @@ import PaneGlideCore
         accessibilityGranted = controller.windows.trusted
         loginState = controller.login.state; settings = controller.store.settings
         shortcutReadiness = controller.shortcutReadiness; shortcutIssue = controller.shortcutIssue
+        practiceStep = controller.practice.step; practiceIssue = controller.practiceIssue
     }
     func refresh() {
         accessibilityGranted = controller.windows.trusted
         loginState = controller.login.state; settings = controller.store.settings
         shortcutReadiness = controller.shortcutReadiness; shortcutIssue = controller.shortcutIssue
+        practiceStep = controller.practice.step; practiceIssue = controller.practiceIssue
     }
     func setLogin(_ enabled: Bool) {
         do { try controller.login.setEnabled(enabled); message = "" }
@@ -96,7 +100,9 @@ struct HelpView: View {
                     shortcutRow(.center)
                     shortcutRow(.snapBack)
                     Text("⌃ Control     ⌥ Option     ⇧ Shift     ⌘ Command").font(.caption).foregroundStyle(.secondary)
-                    Text("Quit other window managers or disable their matching shortcuts first. Choose Edit Shortcuts below to view or change any binding.").font(.callout).foregroundStyle(.secondary)
+                    Text("Choose Edit Shortcuts below to view or change any binding.").font(.callout).foregroundStyle(.secondary)
+                    Divider()
+                    practiceCheck
                 }
                 section("3. Choose when to start") {
                     Toggle("Start PaneGlide automatically at login", isOn: Binding(get: { model.loginState == .enabled || model.loginState == .requiresApproval }, set: { model.setLogin($0) }))
@@ -109,6 +115,24 @@ struct HelpView: View {
                 }
             }.padding(16)
         }
+    }
+    @ViewBuilder private var practiceCheck: some View {
+        switch model.practiceStep {
+        case .idle:
+            Text("Optional: confirm a move and restore using your own window.").font(.callout).foregroundStyle(.secondary)
+            Button("Try Left → SnapBack") { model.controller.beginPractice() }.disabled(!model.canFinishSetup)
+        case .moveLeft:
+            Text("Click a normal window in another app and use Left with your shortcut or the PaneGlide menu. If it is already at Left, move it away first. Return here to see the result.")
+            Button("Cancel Check") { model.controller.cancelPractice() }
+        case .restore:
+            Label("The window moved", systemImage: "checkmark.circle.fill").foregroundStyle(.green)
+            Text("Now use SnapBack on that same window, then return here. It restores the position before your sequence of PaneGlide moves.")
+            Button("Cancel Check") { model.controller.cancelPractice() }
+        case .complete:
+            Label("Move and restore confirmed", systemImage: "checkmark.circle.fill").foregroundStyle(.green)
+            Button("Try Again") { model.controller.beginPractice() }.disabled(!model.canFinishSetup)
+        }
+        if let issue = model.practiceIssue { Text(issue).font(.callout).foregroundStyle(.orange) }
     }
     @ViewBuilder private var shortcutStatus: some View {
         switch model.shortcutReadiness {

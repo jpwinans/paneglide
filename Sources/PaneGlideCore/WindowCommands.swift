@@ -41,8 +41,12 @@ public enum WindowError: Error, LocalizedError, Equatable {
     func apply(_ frame: CGRect, to id: String) throws -> ManagedWindow
 }
 public struct CommandResult: Sendable {
+    public let windowID: String
+    public let previous: CGRect
     public let requested: CGRect
     public let actual: CGRect
+    public let restored: Bool
+    public var changed: Bool { !actual.approximatelyEquals(previous, tolerance: 0.01) }
     public var constrained: Bool { !actual.approximatelyEquals(requested) }
 }
 @MainActor public final class WindowCommands {
@@ -73,7 +77,7 @@ public struct CommandResult: Sendable {
             let frame = try geometry.frame(current: current, screen: layoutDisplay.visibleFrame, settings: layout)
             requested = settings.keepInBounds ? frame.fitting(in: layoutDisplay.visibleFrame, resize: window.resizable) : frame
         } else if action == .snapBack {
-            guard let baseline = baselines[window.id] else { return CommandResult(requested: window.frame, actual: window.frame) }
+            guard let baseline = baselines[window.id] else { return CommandResult(windowID: window.id, previous: window.frame, requested: window.frame, actual: window.frame, restored: false) }
             if displays.contains(where: { $0.id == baseline.displayID }) {
                 requested = baseline.frame
             } else {
@@ -81,7 +85,7 @@ public struct CommandResult: Sendable {
             }
         } else if action == .nextMonitor || action == .previousMonitor {
             guard let index = displays.firstIndex(where: { $0.id == display.id }), displays.count > 1 || onMonitor != nil else {
-                return CommandResult(requested: window.frame, actual: window.frame)
+                return CommandResult(windowID: window.id, previous: window.frame, requested: window.frame, actual: window.frame, restored: false)
             }
             let offset = action == .nextMonitor ? 1 : displays.count - 1
             let destination = onMonitor.map { displays[$0 - 1] } ?? displays[(index + offset) % displays.count]
@@ -127,7 +131,7 @@ public struct CommandResult: Sendable {
         } else if baselines[window.id] == nil && !result.frame.approximatelyEquals(window.frame, tolerance: 0.01) {
             baselines[window.id] = Baseline(frame: window.frame, displayID: display.id)
         }
-        return CommandResult(requested: requested, actual: result.frame)
+        return CommandResult(windowID: window.id, previous: window.frame, requested: requested, actual: result.frame, restored: action == .snapBack && result.frame.approximatelyEquals(requested))
     }
 }
 
