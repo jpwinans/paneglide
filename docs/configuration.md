@@ -19,7 +19,7 @@ part of the preference draft.
 
 ## Shortcuts
 
-Click an action's shortcut button, then press a key combination containing Command,
+Use **Edit Shortcuts…** in Help to open this editor directly. Click an action's shortcut button, then press a key combination containing Command,
 Option, or Control. Escape cancels recording; Delete with no modifiers clears the
 binding. Choose **Apply** to activate the changes.
 
@@ -131,6 +131,6 @@ into the draft; review it and choose Apply to save it. Invalid imports do not re
 the current configuration. Profiles for disconnected displays are retained.
 
 Exports do not include macOS login registration, Accessibility
-grants, or SnapBack history. If a settings document cannot be loaded, the app preserves
+grants, per-Mac Quick Start completion, or SnapBack history. If a settings document cannot be loaded, the app preserves
 it as a `settings-recovery-<identifier>.json` file in the same folder, uses defaults,
 and reports the backup location.

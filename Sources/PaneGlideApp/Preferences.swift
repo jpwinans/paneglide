@@ -85,7 +85,7 @@ struct PreferencesView: View {
     private var general: some View {
         Form {
             Section("Application") {
-                Toggle("Start PaneGlide automatically at login", isOn: Binding(get: { model.loginState == .enabled || model.loginState == .requiresApproval }, set: model.setLogin))
+                Toggle("Start PaneGlide automatically at login", isOn: Binding(get: { model.loginState == .enabled || model.loginState == .requiresApproval }, set: { model.setLogin($0) }))
                 Text(loginDescription).font(.caption).foregroundStyle(.secondary)
                 if model.loginState == .requiresApproval { Button("Open Login Items Settings…") { SMAppService.openSystemSettingsLoginItems() } }
                 Toggle("Show preferences on launch", isOn: $model.draft.showPreferencesOnLaunch)
@@ -121,7 +121,7 @@ struct PreferencesView: View {
                         GridRow {
                             Text(action.title).frame(width: 170, alignment: .leading)
                             ShortcutRecorder(shortcut: model.draft.shortcuts[action], name: action.title,
-                                             changed: { model.setShortcut($0, for: action) }, recording: model.recording).frame(width: 190, height: 26)
+                                             changed: { model.setShortcut($0, for: action) }, recording: { model.recording($0) }).frame(width: 190, height: 26)
                             Toggle(action.title, isOn: Binding(get: { !model.draft.hiddenActions.contains(action) }, set: { if $0 { model.draft.hiddenActions.remove(action) } else { model.draft.hiddenActions.insert(action) } })).labelsHidden().accessibilityLabel("Show \(action.title) in menu")
                         }
                     }

@@ -20,7 +20,7 @@ def validate_app(app):
     if info.get("CFBundleIdentifier") != "com.jpwinans.size-up" or info.get("CFBundleExecutable") != "PaneGlide":
         raise ValueError("The selected bundle is not PaneGlide.")
     subprocess.run(["/usr/bin/codesign", "--verify", "--strict", str(app)], check=True)
-    subprocess.run(["/usr/bin/lipo", "-verify_arch", "arm64", str(app / "Contents/MacOS/PaneGlide")], check=True)
+    subprocess.run(["/usr/bin/lipo", str(app / "Contents/MacOS/PaneGlide"), "-verify_arch", "arm64"], check=True)
     return info
 
 

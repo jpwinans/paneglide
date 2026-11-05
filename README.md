@@ -14,39 +14,36 @@ side panes for ultrawide displays. Each display can have its own layout.
 
 ## Install
 
-**v1.0.0 is a source-only release.** Building requires Xcode 16 or later with Swift 6.
-A paid developer account is not required for a local build. A notarized app download
-and Homebrew package are not available yet.
+PaneGlide builds on your Mac using **Apple's free developer tools (Swift 6+)**.
+No paid developer account or Apple distribution certificate is needed. Setup uses
+Terminal; everyday use is through the menu bar and keyboard.
 
-1. Install Xcode from the Mac App Store and open it once to finish setup.
-2. For a **first installation**, open Terminal and run:
+1. **[Download the source ZIP](https://github.com/jpwinans/paneglide/releases/latest/download/PaneGlide-source.zip)**
+   and double-click it to extract it.
+2. Open **Terminal**. If Apple's developer tools are not installed, run
+   `xcode-select --install` and finish the installation dialog. Current Command Line
+   Tools or Xcode 16+ work; the installer checks your tools for you.
+3. Type `cd ` (with the space), drag the extracted folder into Terminal, press
+   Return, then run:
 
-```sh
-git clone --branch v1.0.0 --depth 1 https://github.com/jpwinans/paneglide.git
-cd paneglide
-CONFIGURATION=release bash scripts/build-app.sh
-mkdir -p "$HOME/Applications"
-ditto dist/PaneGlide.app "$HOME/Applications/PaneGlide.app"
-open "$HOME/Applications/PaneGlide.app"
-```
+   ```sh
+   bash install.sh
+   ```
 
-3. Open **System Settings → Privacy & Security → Accessibility**. Add and enable
-   your installed **PaneGlide.app**.
-4. Click PaneGlide's three-pane menu bar icon → **Preferences… → General**. Confirm
-   that Accessibility access is enabled. Status refreshes when you return to the app.
-5. Focus an ordinary application window and press **Control–Option–Command–Left**.
-   Press **Control–Option–Command–/** to restore it.
+4. PaneGlide opens **Quick Start**. Follow its Accessibility instructions and choose
+   whether to start automatically at login. Then focus another app's window and try
+   **Control–Option–Command–Left**. Use **Control–Option–Command–/** to restore it.
 
-PaneGlide runs in the menu bar; it does not keep a Dock icon. Disable conflicting
-shortcuts in other window utilities before using the same combinations here.
+The installer builds, installs in your home folder's **Applications**, and opens
+PaneGlide. It needs no administrator access. PaneGlide stays in the menu bar;
+quit other window managers or disable their matching shortcuts first.
 
-For an existing installation, quit PaneGlide and replace the **complete app** in
-its original location using Finder. Keep the previous copy until the new one works.
-Saved settings survive replacement. Local builds use an ad-hoc signature by default;
-rebuilding may require removing and re-adding PaneGlide's Accessibility entry.
-See the [installation guide](docs/installation.md) for toolchain selection, stable
-signing, upgrades, and removal. Use **View on GitHub…** to find releases; the app has
-no built-in update checker or installer.
+**To update:** download the newer source ZIP and run `bash install.sh` again. Your
+saved settings stay in place, and the installer keeps a backup of the previous app.
+A rebuild may require removing and re-adding PaneGlide's Accessibility entry.
+See [installation help](docs/installation.md) for tool setup, updates, restoring a
+backup, and removal. The app has no built-in updater; **View on GitHub…** opens the
+repository. **Help…** works offline, and **Edit Shortcuts…** opens the shortcut editor.
 
 ## Move windows
 
@@ -271,7 +268,9 @@ PaneGlide does not move windows between macOS Spaces or provide drag-to-edge sna
 | Access stopped working after a rebuild | Quit and reopen the installed copy; if needed, remove and re-add only PaneGlide's Accessibility entry |
 
 If a menu or shortcut command fails, its explanation appears at the top of the menu
-and clears after the next successful action. **Help…** opens the usage guide;
+and clears after the next successful action. **Quick Start…** shows permission and
+startup setup. **Help…** opens the built-in
+guide, with an **Edit Shortcuts…** button that opens the shortcut editor directly.
 **About PaneGlide…** shows the installed version. **Quit PaneGlide** stops the app.
 
 For more help, see [Support](SUPPORT.md) or
@@ -286,7 +285,7 @@ run locally. The app uses Swift, AppKit, and SwiftUI with no third-party package
 
 | Directory | Contents |
 | --- | --- |
-| `Sources/PaneGlideCore/` | Geometry, window commands, settings, and shortcuts |
+| `Sources/PaneGlideCore/` | Geometry, window commands, settings, shortcuts, and setup state |
 | `Sources/PaneGlideApp/` | Menu bar app, preferences, Accessibility, and macOS services |
 | `Resources/` | App icon artwork, bundle metadata, and scripting dictionary |
 | `Tools/` | Disposable window fixture |

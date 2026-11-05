@@ -1,100 +1,140 @@
-# Installation
+# Install PaneGlide
 
-## Requirements
+PaneGlide is distributed as source code and builds on your Mac. You need an Apple
+silicon Mac running **macOS 14 or later**, Apple's free developer tools with
+**Swift 6 or later**, and a few commands in Terminal. No paid developer account or
+Apple distribution certificate is needed.
 
-- An Apple silicon Mac running macOS 14 or later. PaneGlide runs natively as arm64.
-- Accessibility access to move and resize other applications' windows.
-- To build from source: Xcode 16 or later (Swift 6), available from Apple.
+## Download and install
 
-## Install the app
+1. [Download the source ZIP](https://github.com/jpwinans/paneglide/releases/latest/download/PaneGlide-source.zip)
+   and double-click it in Finder to extract it.
+2. Open **Terminal** from Applications → Utilities. If you do not already have
+   Apple's developer tools, run this command and finish the installation dialog:
 
-There is no notarized download yet. Start with [Build from source](#build-from-source).
+   ```sh
+   xcode-select --install
+   ```
 
-When a `PaneGlide.zip` package is available on [Releases](https://github.com/jpwinans/paneglide/releases), unzip it in Finder. Move **PaneGlide.app** to
-`~/Applications` (the Applications folder inside your home folder), then open it.
-Keep the app in that location so startup registration and future updates use the
-same installation. The app appears in the menu bar rather than keeping a Dock icon.
+   The current Command Line Tools are sufficient. Xcode 16 or later also works.
+   The installer checks that your selected tools include Swift 6 and the macOS SDK.
+3. In Terminal, type `cd ` (including the space), drag the extracted PaneGlide folder
+   from Finder into Terminal, and press Return. Then run:
 
-For an existing installation, quit PaneGlide and replace the complete app in the
-same location using Finder. Keep a copy of the previous app until the new version
-works. Saved settings are stored separately and survive app replacement.
+   ```sh
+   bash install.sh
+   ```
 
-Disable matching shortcuts in other window utilities before enabling PaneGlide's
-shortcuts, so only one app responds to each key combination.
+4. Wait for **Installed PaneGlide**. The app opens **Quick Start**, which guides you
+   through Accessibility access and optional startup at login.
+
+The installer builds the app, checks its local signature and Apple silicon code,
+and puts **PaneGlide.app** in the Applications folder inside your home folder
+(`~/Applications`). It does not need administrator access. Keep the app there so
+startup and upgrades use the same location. You can delete the downloaded source
+folder after installation; the installed app does not depend on it.
+
+PaneGlide lives in the menu bar and does not keep a Dock icon. Quit other window
+managers or disable their matching shortcuts before using PaneGlide.
 
 ## Enable Accessibility
 
-1. Open System Settings → Privacy & Security → Accessibility.
-2. Add your installed **PaneGlide.app** if it is not listed, then enable it.
-3. Return to PaneGlide → Preferences → General. The status refreshes automatically
-   and should read **Accessibility access is enabled**.
-4. Focus an ordinary application window and try a positioning shortcut.
+1. In Quick Start, choose **Open Accessibility Settings…**.
+2. In System Settings → Privacy & Security → Accessibility, enable **PaneGlide**.
+   If it is not listed, click **+** and select your installed PaneGlide.app.
+   **Show App in Finder** helps you locate that exact copy.
+3. Return to Quick Start. Its status should read **Accessibility access is enabled**.
+4. Choose **Start Using PaneGlide**. Focus a normal window in another app, then press
+   **Control–Option–Command–Left**. Press **Control–Option–Command–/** to restore it.
 
-If access appears enabled but actions fail after replacing a development build,
-quit PaneGlide and reopen the installed copy. If General still reports no access,
-remove only the new **PaneGlide** entry from Accessibility, add the installed app
-again, and enable it. A consistent signing identity reduces the need to refresh
-this grant between builds.
+You can reopen Quick Start from the menu at any time. Help includes **Edit Shortcuts…**,
+which opens the shortcut editor directly. PaneGlide does not need Screen Recording
+permission. [Privacy](privacy.md) explains what it accesses and stores.
+
+Local builds use an ad-hoc signature. After a rebuild or update, macOS may require
+an Accessibility refresh: quit and reopen PaneGlide first. If Quick Start still
+reports no access, remove **PaneGlide** from the Accessibility list, add the
+installed copy again, and enable it. You do not need to change permissions for any
+other application or disable macOS security protections.
 
 ## Start at login
 
-In Preferences → General, enable **Start PaneGlide automatically at login**. This
-switch takes effect immediately, without Apply. Its status reports the macOS
-registration result. If approval is required, use **Open Login Items Settings…**
-and approve PaneGlide there.
+Enable **Start PaneGlide automatically at login** in Quick Start or Preferences →
+General. This switch takes effect immediately, without Apply. If macOS requires
+approval, use **Open Login Items Settings…** and approve PaneGlide there.
 
 Leave **Show preferences on launch** off to start quietly in the menu bar. Changes
-to that option require **Apply**. Reopen the app from Finder whenever you want its
-preferences, including when the menu icon is hidden.
+to that option require **Apply**. Open PaneGlide from Finder to return to Preferences
+when the menu icon is hidden; if Help is already open, use its Preferences button.
 
-## Build from source
+## Update
 
-1. Install Xcode 16 or later from the Mac App Store. Open it once to finish its
-   setup. If `swift --version` reports a version below 6, select your Xcode toolchain
-   in Xcode → Settings → Locations → Command Line Tools.
-2. Open Terminal and run:
+Download the latest source ZIP, extract it, open Terminal in that new folder, and
+run the same command:
+
+```sh
+bash install.sh
+```
+
+The installer finishes building before stopping the installed app. It replaces
+the complete app, opens the new copy, and leaves your saved settings intact. Apply
+or discard any pending Preferences edits before updating. SnapBack history clears
+when the app restarts.
+
+A ZIP of the previous app is kept in `~/Applications/.PaneGlide Backups/`. To find
+that hidden folder in Finder, use **Go → Go to Folder…** and paste the path. To
+restore a backup, extract its ZIP, quit PaneGlide, and use Finder to replace the
+current app with the extracted copy. Keep the same installation location. This
+restores the app; it does not roll back your settings. Use **Export Saved Settings…**
+if you also want a configuration backup. Old app backups can be deleted when you
+no longer need them.
+
+PaneGlide has no built-in updater. Use **View on GitHub…** for new releases.
+
+## Troubleshooting installation
+
+| Message or problem | What to do |
+| --- | --- |
+| `install.sh` cannot be found | Open Terminal in the extracted folder containing `install.sh`; use the `cd ` and drag step above |
+| Developer tools are missing | Run `xcode-select --install`, finish the dialog, then retry |
+| Swift 6 or later is required | Update Command Line Tools in System Settings → General → Software Update, or install Xcode 16+ and select its Command Line Tools in Xcode → Settings → Locations |
+| Xcode setup or license is incomplete | Open Xcode and complete its setup, then retry |
+| The app is already installed | Run the installer normally; it backs up and replaces the existing PaneGlide app |
+| Another app occupies the destination | Move or rename that unrelated app, or choose another Applications folder; the installer will not replace it |
+| The app opens but nothing moves | Check Quick Start's Accessibility status and use an ordinary, unminimized window outside macOS Full Screen |
+| A build fails | Keep the Terminal error text and include it with your macOS and Swift versions in a [support request](../SUPPORT.md) |
+
+Apple documents [installing the Command Line Tools](https://developer.apple.com/documentation/xcode/installing-the-command-line-tools).
+For runtime issues, see [troubleshooting](usage.md#troubleshooting).
+
+## Other installation options
+
+For Git users:
 
 ```sh
 git clone https://github.com/jpwinans/paneglide.git
 cd paneglide
-swift --version
-bash scripts/test.sh
-CONFIGURATION=release bash scripts/build-app.sh
-mkdir -p "$HOME/Applications"
-ditto dist/PaneGlide.app "$HOME/Applications/PaneGlide.app"
-open "$HOME/Applications/PaneGlide.app"
+bash install.sh
 ```
 
-These installation commands assume PaneGlide is not already installed. Quit an
-existing copy before replacing it. The app opens in the menu bar; finish the
-[Accessibility setup](#enable-accessibility) before trying shortcuts.
+This installs the current `main` branch. Release ZIPs provide a fixed released version.
 
-The default local build is ad-hoc signed and needs no developer account. macOS may
-require you to remove and re-add its Accessibility entry after rebuilding. You can update local builds with the same build and installation steps after
-fetching the new source. Quit PaneGlide and replace the complete installed bundle
-in Finder to avoid retaining files from the previous build.
-
-For a stable development signature, list your available identities and select
-one in your shell before building:
+Use `bash install.sh --help` for options. For example:
 
 ```sh
-security find-identity -v -p codesigning
-export CODE_SIGN_IDENTITY='your signing identity from the list'
-CONFIGURATION=release bash scripts/build-app.sh
+bash install.sh --no-launch
+bash install.sh --applications-dir "$HOME/Applications"
 ```
 
-The build produces `dist/PaneGlide.app`, includes the GPL license, enables hardened
-runtime, and verifies the plist, arm64 architecture, and signature. An Apple
-Development signature is suitable for your local installation; a public download
-requires Developer ID signing and notarization. See [release packaging](releasing.md#build-a-release-package).
-
-Omit `CONFIGURATION=release` for a debug build with native fixture test controls.
-Set `PANEGLIDE_VERSION=major.minor.patch` to override the version in `Resources/Info.plist`.
+Use the same destination on updates. Development builds and optional local signing
+are covered in [Contributing](../CONTRIBUTING.md).
 
 ## Remove the app
 
-Turn off **Start PaneGlide automatically at login**, then choose **Quit PaneGlide**
-from the menu. Move the app to Trash. Saved preferences remain in
-`~/Library/Application Support/PaneGlide/` so reinstalling can reuse them.
+Turn off **Start PaneGlide automatically at login**, choose **Quit PaneGlide**, and
+move the app to Trash. Saved settings remain in
+`~/Library/Application Support/PaneGlide/` so reinstalling can reuse them. You can
+also remove PaneGlide's Accessibility entry in System Settings.
 
-Settings exports do not include the macOS login registration or Accessibility grant.
+Settings exports do not include macOS startup registration, Accessibility access,
+or per-Mac Quick Start completion.

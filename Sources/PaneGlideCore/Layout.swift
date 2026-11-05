@@ -61,9 +61,10 @@ public enum Layout {
             let config = left ? settings.alternateLeft : settings.alternateRight
             guard config.enabled, current.approximatelyEquals(normal) else { return normal }
             let widthConfig = settings.linkAlternateWidths ? settings.alternateLeft : config
+            let availableWidth = Double(area.width)
             let width = widthConfig.fitBesideCenter
-                ? (area.width - min(area.width, settings.centerWidth.resolve(area.width))) / 2 - gx * 2
-                : min(area.width, widthConfig.width.resolve(area.width))
+                ? (availableWidth - min(availableWidth, settings.centerWidth.resolve(availableWidth))) / 2 - gx * 2
+                : min(availableWidth, widthConfig.width.resolve(availableWidth))
             return CGRect(x: left ? area.minX : area.maxX - width, y: area.minY, width: width, height: area.height)
         }
         switch action {
