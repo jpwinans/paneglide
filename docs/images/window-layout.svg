@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="972" height="308" viewBox="0 0 972 308" role="img" aria-labelledby="title description">
+<title id="title">Repeated Left and Right make room around a centered window</title>
+<desc id="description">Example: Center is 60 percent wide. Left first uses a 50 percent split, then a 20 percent side pane. Repeating Right creates the matching side. Every width is configurable.</desc>
+<rect width="972" height="308" rx="16" fill="#f5f7fb"/>
+<g font-family="-apple-system, BlinkMacSystemFont, Arial, sans-serif"><text x="26.00" y="49" font-size="21" font-weight="650" fill="#17243b">1. Left</text>
+<rect x="26.00" y="76" width="280" height="140" rx="7" fill="#e5eaf2"/><rect x="82.00" y="76.00" width="168.00" height="140.00" rx="5" fill="#456ed2" stroke="#fff" stroke-width="2"/>
+<path d="M88.00 95.00 H244.00" stroke="#fff" opacity=".35"/>
+<text x="166.00" y="154.00" text-anchor="middle" fill="#fff" font-size="17" font-weight="600"></text><rect x="26.00" y="76.00" width="140.00" height="140.00" rx="5" fill="#087f8c" stroke="#fff" stroke-width="2"/>
+<path d="M32.00 95.00 H160.00" stroke="#fff" opacity=".35"/>
+<text x="96.00" y="154.00" text-anchor="middle" fill="#fff" font-size="17" font-weight="600">50%</text><text x="26.00" y="246" font-size="16" fill="#42526a">Normal split</text><text x="346.00" y="49" font-size="21" font-weight="650" fill="#17243b">2. Left again</text>
+<rect x="346.00" y="76" width="280" height="140" rx="7" fill="#e5eaf2"/><rect x="402.00" y="76.00" width="168.00" height="140.00" rx="5" fill="#456ed2" stroke="#fff" stroke-width="2"/>
+<path d="M408.00 95.00 H564.00" stroke="#fff" opacity=".35"/>
+<text x="486.00" y="154.00" text-anchor="middle" fill="#fff" font-size="17" font-weight="600">60%</text><rect x="346.00" y="76.00" width="56.00" height="140.00" rx="5" fill="#087f8c" stroke="#fff" stroke-width="2"/>
+<path d="M352.00 95.00 H396.00" stroke="#fff" opacity=".35"/>
+<text x="374.00" y="154.00" text-anchor="middle" fill="#fff" font-size="17" font-weight="600">20%</text><text x="346.00" y="246" font-size="16" fill="#42526a">Configured alternate width</text><text x="666.00" y="49" font-size="21" font-weight="650" fill="#17243b">3. Repeat on Right</text>
+<rect x="666.00" y="76" width="280" height="140" rx="7" fill="#e5eaf2"/><rect x="722.00" y="76.00" width="168.00" height="140.00" rx="5" fill="#456ed2" stroke="#fff" stroke-width="2"/>
+<path d="M728.00 95.00 H884.00" stroke="#fff" opacity=".35"/>
+<text x="806.00" y="154.00" text-anchor="middle" fill="#fff" font-size="17" font-weight="600">60%</text><rect x="666.00" y="76.00" width="56.00" height="140.00" rx="5" fill="#087f8c" stroke="#fff" stroke-width="2"/>
+<path d="M672.00 95.00 H716.00" stroke="#fff" opacity=".35"/>
+<text x="694.00" y="154.00" text-anchor="middle" fill="#fff" font-size="17" font-weight="600">20%</text><rect x="890.00" y="76.00" width="56.00" height="140.00" rx="5" fill="#7450b5" stroke="#fff" stroke-width="2"/>
+<path d="M896.00 95.00 H940.00" stroke="#fff" opacity=".35"/>
+<text x="918.00" y="154.00" text-anchor="middle" fill="#fff" font-size="17" font-weight="600">20%</text><text x="666.00" y="246" font-size="16" fill="#42526a">Room for your main window</text>
+<text x="486" y="285" text-anchor="middle" font-size="15" fill="#42526a">Example values only. Configure Center and side widths in percent or points.</text></g>
+</svg>

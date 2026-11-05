@@ -91,6 +91,8 @@ Accessibility access should start quietly.
 
 Open Quick Start from Preferences → General and from the menu. Open Help from the menu. Check both tabs and scroll the guide.
 Choose Edit Shortcuts and confirm Preferences opens directly to its shortcut editor.
+Choose Configure Center & Side Panes and confirm the editable Window Sizes tab
+opens, with display selection and configurable Center/alternate sizes.
 Record a temporary shortcut, cancel or revert it, and check that saved bindings
 remain intact. Check that opening Preferences from Help works and that Help remains usable offline. Login changes
 should reflect the macOS registration result. Do not revoke an everyday
@@ -102,3 +104,18 @@ on the same window must produce “Move and restore confirmed.” An unchanged w
 a restore on another window, or a constrained/failed restore must not complete the
 check. Canceling it must leave normal SnapBack restoration available. Test with
 physical shortcuts and with menu actions; no synthetic key injection is required.
+
+### Fresh-account acceptance
+
+Use a separate macOS account or another Mac without PaneGlide settings or an
+Accessibility grant. Build from the published source ZIP with `bash install.sh`.
+Before granting access, Quick Start must show access is needed and prevent setup
+completion. Grant access and return to verify the live status. If an existing
+window utility conflicts, resolve the conflict and use Retry Shortcuts. Complete
+the optional practice check with a physical keyboard, then configure and try the
+alternate side widths. Finish setup, quit, and reopen: the tour should stay closed.
+Enable startup only if desired and check it after the next login.
+
+A fresh build directory or isolated preferences test does not establish this OS
+permission experience. Record which of these checks were actually performed in the
+release pull request, and keep outstanding interactive checks explicit.

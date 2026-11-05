@@ -31,8 +31,10 @@ Terminal; everyday use is through the menu bar and keyboard.
    ```
 
 4. PaneGlide opens **Quick Start**. Follow its Accessibility instructions and choose
-   whether to start automatically at login. Then focus another app's window and try
-   **Control–Option–Command–Left**. Use **Control–Option–Command–/** to restore it.
+   whether to start automatically at login. Check that shortcuts are ready; if a
+   conflict is reported, resolve it with **Edit Shortcuts…** and **Retry Shortcuts**.
+   Use the optional **Try Left → SnapBack** check to confirm a real move and restore.
+   You can also use menu actions with shortcuts intentionally disabled.
 
 The installer builds, installs in your home folder's **Applications**, and opens
 PaneGlide. It needs no administrator access. PaneGlide stays in the menu bar;
@@ -44,6 +46,13 @@ A rebuild may require removing and re-adding PaneGlide's Accessibility entry.
 See [installation help](docs/installation.md) for tool setup, updates, restoring a
 backup, and removal. The app has no built-in updater; **View on GitHub…** opens the
 repository. **Help…** works offline, and **Edit Shortcuts…** opens the shortcut editor.
+
+## See the layout
+
+![Left uses the normal split, repeating Left uses a configured side width, and repeating Right completes a centered workspace. Every width is configurable.](docs/images/window-layout.svg)
+
+Choose **Configure Center & Side Panes…** in Quick Start to open Window Sizes.
+The illustration uses example values; set the widths that fit your display.
 
 ## Move windows
 

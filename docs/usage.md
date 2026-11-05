@@ -31,7 +31,8 @@ Left/Right and the four corner actions use the configured dividers, margins, and
 
 ## Center with two side windows
 
-Choose the desired display in Preferences → Window Sizes, enabling separate display
+Choose **Configure Center & Side Panes…** in Quick Start, or open Preferences →
+Window Sizes. Choose the desired display, enabling separate display
 settings if needed. Configure Center's width and height, then enable Alternate Left
 and Alternate Right. Use manual side widths or **Fit beside Center** and choose Apply.
 
