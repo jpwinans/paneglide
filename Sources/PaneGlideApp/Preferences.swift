@@ -211,8 +211,6 @@ struct PreferencesView: View {
             Section("Best-effort behavior") {
                 Toggle("Center windows that do not resize fully", isOn: $model.draft.centerConstrainedWindows)
                 Toggle("Try to keep windows in bounds", isOn: $model.draft.keepInBounds)
-                Toggle("Account for attached legacy drawers", isOn: $model.draft.accountForDrawers)
-                Text("Applies to apps exposing an attached AXDrawer with usable bounds. Modern sidebars are part of their parent window.").font(.caption).foregroundStyle(.secondary)
                 Text("Applications can impose minimum sizes or fixed dimensions. PaneGlide reads the actual result and reports a constraint when the requested layout cannot be reached.").foregroundStyle(.secondary)
             }
         }.formStyle(.grouped)

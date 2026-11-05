@@ -142,7 +142,6 @@ import PaneGlideCore
         do {
             guard let fixture = NSRunningApplication.runningApplications(withBundleIdentifier: "com.jpwinans.size-up.fixture").first else { throw WindowError.noWindow }
             let target = try windows.firstWindow(pid: fixture.processIdentifier)
-            report["drawerInsets"] = [target.drawerInsets.top, target.drawerInsets.left, target.drawerInsets.bottom, target.drawerInsets.right]
             defer {
                 let restored = try? windows.apply(target.frame, to: target.id)
                 report["restored"] = restored?.frame.approximatelyEquals(target.frame) ?? false
@@ -155,8 +154,7 @@ import PaneGlideCore
             func check(_ action: WindowAction, monitor: Int? = nil, label: String) throws {
                 let start = Date.timeIntervalSinceReferenceDate
                 let result = try commands.execute(action, target: target.id, onMonitor: monitor, settings: settings)
-                let insets = try windows.window(id: target.id).drawerInsets
-                results.append(["case": label, "action": action.rawValue, "constrained": result.constrained, "actual": NSStringFromRect(result.actual), "expected": NSStringFromRect(result.requested), "drawerInsets": [insets.top, insets.left, insets.bottom, insets.right], "seconds": Date.timeIntervalSinceReferenceDate - start])
+                results.append(["case": label, "action": action.rawValue, "constrained": result.constrained, "actual": NSStringFromRect(result.actual), "expected": NSStringFromRect(result.requested), "seconds": Date.timeIntervalSinceReferenceDate - start])
             }
             for index in displays.indices {
                 let label = "display-\(index + 1)"
@@ -175,29 +173,6 @@ import PaneGlideCore
                 settings.layout.alternateLeft.enabled = true; settings.layout.alternateRight.enabled = true
             }
             report["passed"] = !results.isEmpty && results.allSatisfy { $0["constrained"] as? Bool == false }
-            if ProcessInfo.processInfo.arguments.contains("--drawer-checks") {
-                var phases: [[String: Any]] = []
-                func setDrawer(open: Bool) throws {
-                    DistributedNotificationCenter.default().postNotificationName(.init("com.jpwinans.size-up.fixture.drawer"), object: open ? "open" : "close", userInfo: nil, deliverImmediately: true)
-                    let deadline = Date().addingTimeInterval(2)
-                    while Date() < deadline {
-                        let data = try Data(contentsOf: URL(fileURLWithPath: "/private/tmp/paneglide-fixture.json"))
-                        let fixtureState = try JSONSerialization.jsonObject(with: data) as? [String: Any]
-                        if fixtureState?["drawerState"] as? Int == (open ? 2 : 0) { return }
-                        Thread.sleep(forTimeInterval: 0.025)
-                    }
-                    throw SettingsError.invalid("The disposable drawer did not finish opening or closing.")
-                }
-                settings = AppSettings()
-                for (name, open, account) in [("closed", false, true), ("open-ignored", true, false), ("open-reserved", true, true)] {
-                    try setDrawer(open: open)
-                    settings.accountForDrawers = account
-                    let result = try commands.execute(.left, target: target.id, onMonitor: 1, settings: settings)
-                    let insets = try windows.window(id: target.id).drawerInsets
-                    phases.append(["phase": name, "actual": [result.actual.minX, result.actual.minY, result.actual.width, result.actual.height], "drawerInsets": [insets.top, insets.left, insets.bottom, insets.right]])
-                }
-                report["drawerPhases"] = phases
-            }
         } catch { report["error"] = error.localizedDescription }
         report["results"] = results
         if let data = try? JSONSerialization.data(withJSONObject: report, options: [.prettyPrinted, .sortedKeys]) { try? data.write(to: output, options: .atomic) }

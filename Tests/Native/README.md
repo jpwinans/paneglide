@@ -39,8 +39,7 @@ open -W -n 'dist/PaneGlide.app' --args --integration-test
 Constrained requests are expected for these variants. Inspect actual frames and
 require restoration; `passed` means every requested frame was attained, so it is
 not the success criterion for a deliberately constrained window. The starting fixture
-must fit on the test display. The optional legacy drawer runner is
-`scripts/test-native-drawer.py` and uses its own disposable fixture.
+must fit on the test display.
 
 ## Multiple-window workflow
 

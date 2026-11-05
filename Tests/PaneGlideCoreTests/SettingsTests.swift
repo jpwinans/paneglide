@@ -103,7 +103,7 @@ import PaneGlideCore
     value.menuVisible = false; value.showPreferencesOnLaunch = true
     value.showTooltips = false; value.showOverlay = false
     value.resizeProportionally = false; value.centerConstrainedWindows = false
-    value.keepInBounds = false; value.accountForDrawers = false
+    value.keepInBounds = false
     value.layout.splitX = 0.6; value.layout.splitY = 0.4
     value.layout.quarterX = 0.3; value.layout.quarterY = 0.7
     value.layout.margins.enabled = false; value.layout.margins.left = 10
@@ -174,7 +174,7 @@ import PaneGlideCore
     expected.layout.alternateLeft.width = Dimension(21)
     expected.displayLayouts["external"] = expected.layout
     expected.shortcuts = [.left: Shortcut(0, modifiers: 5)]
-    let retiredOptions = ["automaticUpdateChecks"]
+    let retiredOptions = ["automaticUpdateChecks", "accountForDrawers"]
     var document = try #require(JSONSerialization.jsonObject(with: JSONEncoder().encode(expected)) as? [String: Any])
     for key in retiredOptions { document[key] = true }
     let legacyData = try JSONSerialization.data(withJSONObject: document)
