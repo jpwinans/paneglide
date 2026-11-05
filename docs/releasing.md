@@ -16,7 +16,7 @@ From the repository root:
 ```sh
 export CODE_SIGN_IDENTITY='Developer ID Application: your signing identity'
 export NOTARYTOOL_PROFILE='your configured notarytool profile'
-export PANEGLIDE_VERSION=0.3.1
+export PANEGLIDE_VERSION=1.0.0
 bash scripts/package-release.sh
 ```
 
