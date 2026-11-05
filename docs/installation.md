@@ -59,7 +59,10 @@ SnapBack history remains available.
 
 You can reopen Quick Start from the menu or the **Quick Start…** button in
 **Preferences → General** at any time. Help includes **Edit Shortcuts…**,
-which opens the shortcut editor directly. PaneGlide does not need Screen Recording
+which opens the shortcut editor directly. **Configure Center & Side Panes…** opens
+Window Sizes, where you can choose your display and configure its widths. The
+illustrated 60% Center and 20% sides are examples, not required settings.
+PaneGlide does not need Screen Recording
 permission. [Privacy](privacy.md) explains what it accesses and stores.
 
 Local builds use an ad-hoc signature. After a rebuild or update, macOS may require

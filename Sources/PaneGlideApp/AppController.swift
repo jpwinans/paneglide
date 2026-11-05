@@ -157,6 +157,10 @@ import PaneGlideCore
         showPreferences()
         preferencesModel?.page = .shortcuts
     }
+    func configureWindowSizes() {
+        showPreferences()
+        preferencesModel?.page = .sizing
+    }
     func windowWillClose(_ notification: Notification) {
         if let window = notification.object as? NSWindow, window === helpWindow {
             if practice.step == .moveLeft || practice.step == .restore { practice.cancel() }

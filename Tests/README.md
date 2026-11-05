@@ -10,7 +10,8 @@ bash scripts/test.sh
 
 The Swift Testing suite covers layout geometry, display coordinates, window commands
 and SnapBack, settings validation and persistence, shortcut registration,
-login state, per-Mac setup completion, and scripting geometry. It uses
+login state, setup readiness/completion, the optional move-and-restore check, and
+scripting geometry. It uses
 public component interfaces and literal expected results. The suite does not move
 real application windows or require Accessibility access.
 
@@ -64,3 +65,9 @@ build. Their generated output belongs in `.build/` or temporary directories.
 
 Run builds and tests sequentially when they share the same `.build` directory.
 GitHub Actions is disabled for this repository; checks run locally.
+
+## Layout illustration
+
+Run `bash scripts/render-layout-demo.sh` to regenerate the README's SVG example
+from the app's layout engine. Inspect the resulting illustration when changing it.
+The Quick Start diagram uses the same geometry with clearly labeled example widths.

@@ -104,6 +104,11 @@ struct HelpView: View {
                     Divider()
                     practiceCheck
                 }
+                section("Center and side panes") {
+                    LayoutDemo()
+                    Button("Configure Center & Side Panes…") { model.controller.configureWindowSizes() }
+                    Text("In Window Sizes, select the display you want to configure. Your laptop and monitor can use different layouts.").font(.callout).foregroundStyle(.secondary)
+                }
                 section("3. Choose when to start") {
                     Toggle("Start PaneGlide automatically at login", isOn: Binding(get: { model.loginState == .enabled || model.loginState == .requiresApproval }, set: { model.setLogin($0) }))
                     Text("Optional. This switch takes effect immediately.").font(.caption).foregroundStyle(.secondary)
@@ -127,6 +132,7 @@ struct HelpView: View {
         case .restore:
             Label("The window moved", systemImage: "checkmark.circle.fill").foregroundStyle(.green)
             Text("Now use SnapBack on that same window, then return here. It restores the position before your sequence of PaneGlide moves.")
+            Text("If the check stays here, the app may be limiting its size. You can cancel and try another resizable window.").font(.caption).foregroundStyle(.secondary)
             Button("Cancel Check") { model.controller.cancelPractice() }
         case .complete:
             Label("Move and restore confirmed", systemImage: "checkmark.circle.fill").foregroundStyle(.green)
@@ -158,6 +164,7 @@ struct HelpView: View {
                 }
                 section("Make room on an ultrawide") {
                     Text("In Preferences → Window Sizes, choose a Center width and height, then enable Alternate Left and Alternate Right. Use percentages or fixed macOS points. Fit beside Center calculates each side’s remaining space for you.")
+                    Button("Configure Center & Side Panes…") { model.controller.configureWindowSizes() }
                     Text("Center your main window. Focus a side window and use Left twice: the first press uses your split, the next uses its alternate width. Repeat with Right for the other side. A third press returns to the split. Each command moves only the focused window.")
                 }
                 section("Make it yours") {
