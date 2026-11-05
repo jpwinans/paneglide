@@ -26,6 +26,7 @@ third-party package dependencies.
 
 ```sh
 bash scripts/test.sh
+bash scripts/test-command-line-build.sh
 CONFIGURATION=release bash scripts/build-app.sh
 ```
 
