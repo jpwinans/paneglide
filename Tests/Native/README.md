@@ -82,7 +82,10 @@ needs inspection rather than being treated as a successful layout.
 On a fresh user account, start the installed app and check that Quick Start appears
 without opening System Settings until requested. Accessibility status must reflect
 the actual grant when returning from System Settings; Start Using PaneGlide is
-available only after access is granted. Closing setup without completing it should
+available only after access is granted and enabled shortcuts have registered.
+A conflicting shortcut should be explained inside Quick Start, with Retry Shortcuts
+available after resolving the conflict. Disabled or unassigned shortcuts should
+allow completion for menu-only use. Closing setup without completing it should
 leave it available on the next launch. Existing configured installations with
 Accessibility access should start quietly.
 
