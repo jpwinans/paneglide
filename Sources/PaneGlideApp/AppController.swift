@@ -9,6 +9,7 @@ import PaneGlideCore
     var statusItem: NSStatusItem?
     var capturedTarget: String?
     var preferencesWindow: NSWindow?
+    var preferencesModel: PreferencesModel?
     var helpWindow: NSWindow?
     var helpModel: HelpModel?
     let setup = SetupProgress()
@@ -120,17 +121,23 @@ import PaneGlideCore
         if preferencesWindow == nil {
             let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 840, height: 700), styleMask: [.titled, .closable, .resizable, .miniaturizable], backing: .buffered, defer: false)
             window.title = "PaneGlide Preferences"; window.isReleasedWhenClosed = false; window.delegate = self
-            window.contentView = NSHostingView(rootView: PreferencesView(model: PreferencesModel(controller: self)))
+            let model = PreferencesModel(controller: self)
+            preferencesModel = model
+            window.contentView = NSHostingView(rootView: PreferencesView(model: model))
             window.center(); preferencesWindow = window
         }
         NSApp.activate(ignoringOtherApps: true); preferencesWindow?.makeKeyAndOrderFront(nil)
+    }
+    func editShortcuts() {
+        showPreferences()
+        preferencesModel?.page = .shortcuts
     }
     func windowWillClose(_ notification: Notification) {
         if let window = notification.object as? NSWindow, window === helpWindow {
             helpWindow = nil; helpModel = nil
         }
         if let window = notification.object as? NSWindow, window === preferencesWindow {
-            preferencesWindow = nil
+            preferencesWindow = nil; preferencesModel = nil
             do { try shortcutCommands.apply(store.settings.shortcuts, enabled: store.settings.shortcutsEnabled) } catch { showError(error) }
         }
     }
