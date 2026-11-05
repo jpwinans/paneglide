@@ -135,7 +135,7 @@ private final class ScriptRectangle: NSObject {
 
 extension NSApplication {
     @objc var paneGlideName: String { "PaneGlide" }
-    @objc var paneGlideVersion: String { Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "0.1.0" }
+    @objc var paneGlideVersion: String { Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "Unknown" }
     @objc var paneGlideEnabled: Bool {
         get { (delegate as? AppController)?.store.settings.shortcutsEnabled ?? false }
         set {

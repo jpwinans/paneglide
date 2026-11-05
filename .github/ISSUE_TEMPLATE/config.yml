@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Setup and usage guide
+    url: https://github.com/jpwinans/paneglide#install
+    about: Start here for installation, configuration, shortcuts, and troubleshooting.
+  - name: Report a security vulnerability privately
+    url: https://github.com/jpwinans/paneglide/security/advisories/new
+    about: Use a private report for security issues instead of a public issue.
