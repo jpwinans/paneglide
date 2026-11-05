@@ -46,3 +46,10 @@ assert (other/'Contents/Info.plist').read_bytes()==original
 assert not (other.parent/'.PaneGlide Backups').exists()
 print('PASS: an unrelated app at the destination is preserved.')
 PY
+
+# Exercise the default launch path without starting an app: validation must run first.
+if bash install.sh --app "$install_test_root/missing.app" --applications-dir "$install_test_root/Applications" > "$install_test_root/missing.log" 2>&1; then
+    echo 'FAIL: installer accepted a missing app.' >&2; exit 1
+fi
+grep -q 'Installation could not finish:' "$install_test_root/missing.log"
+echo 'PASS: default launch mode reports invalid input without starting an app.'

@@ -25,11 +25,12 @@ in the same folder.
 SnapBack baselines and window references are held in memory and cleared when the
 app quits. The Accessibility grant and login registration are managed by macOS;
 they are not included in settings exports. A local macOS preference records whether
-the app has already explained Accessibility setup.
+Quick Start has been completed on this Mac.
 
 ## External links and reports
 
-Choosing Help or View on GitHub opens GitHub in your browser. That browsing is
+Help works offline. Choosing View on GitHub or the full-guide link in Help opens
+GitHub in your browser. That browsing is
 subject to GitHub's policies and your browser settings. The app does not upload
 window information when opening those links.
 
