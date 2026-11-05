@@ -4,7 +4,7 @@ import ServiceManagement
 import PaneGlideCore
 
 @MainActor final class HelpModel: ObservableObject {
-    enum Page { case setup, shortcuts, guide }
+    enum Page { case setup, guide }
     @Published var page: Page
     @Published var accessibilityGranted: Bool
     @Published var loginState: LoginState
@@ -49,10 +49,10 @@ struct HelpView: View {
             }
             TabView(selection: $model.page) {
                 quickStart.tabItem { Label("Quick Start", systemImage: "sparkles") }.tag(HelpModel.Page.setup)
-                shortcuts.tabItem { Label("Your Shortcuts", systemImage: "keyboard") }.tag(HelpModel.Page.shortcuts)
                 guide.tabItem { Label("Using PaneGlide", systemImage: "book") }.tag(HelpModel.Page.guide)
             }
             HStack {
+                Button("Edit Shortcuts…") { model.controller.editShortcuts() }
                 Button("Preferences…") { model.controller.showPreferences() }
                 Spacer()
                 if model.page == .setup {
@@ -89,7 +89,8 @@ struct HelpView: View {
                     shortcutRow(.left)
                     shortcutRow(.center)
                     shortcutRow(.snapBack)
-                    Text("Quit other window managers or disable their matching shortcuts first. Open Your Shortcuts above for the complete list.").font(.callout).foregroundStyle(.secondary)
+                    Text("⌃ Control     ⌥ Option     ⇧ Shift     ⌘ Command").font(.caption).foregroundStyle(.secondary)
+                    Text("Quit other window managers or disable their matching shortcuts first. Choose Edit Shortcuts below to view or change any binding.").font(.callout).foregroundStyle(.secondary)
                     if !model.settings.shortcutsEnabled { Text("Shortcuts are currently disabled. Enable them in Preferences → Shortcuts or from the menu bar.").foregroundStyle(.orange) }
                 }
                 section("3. Choose when to start") {
@@ -102,18 +103,6 @@ struct HelpView: View {
                     if !model.message.isEmpty { Text(model.message).foregroundStyle(.orange) }
                 }
             }.padding(16)
-        }
-    }
-    private var shortcuts: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 16) {
-                Text("These are your saved shortcuts. Change them in Preferences → Shortcuts, then choose Apply.").foregroundStyle(.secondary)
-                if !model.settings.shortcutsEnabled { Text("Shortcuts are currently disabled.").foregroundStyle(.orange) }
-                ForEach(WindowAction.allCases, id: \.self) { shortcutRow($0) }
-                Divider()
-                Text("⌃ Control     ⌥ Option     ⇧ Shift     ⌘ Command").font(.callout)
-                Text("You can also choose actions from the menu bar. Maximize fills the usable desktop without entering macOS Full Screen.").foregroundStyle(.secondary)
-            }.padding(20)
         }
     }
     private var guide: some View {

@@ -86,8 +86,9 @@ available only after access is granted. Closing setup without completing it shou
 leave it available on the next launch. Existing configured installations with
 Accessibility access should start quietly.
 
-Open Quick Start and Help from the menu. Check all three tabs, scroll the guide,
-and confirm Your Shortcuts matches saved custom bindings. Check that opening
-Preferences from Help works and that Help remains usable offline. Login changes
+Open Quick Start and Help from the menu. Check both tabs and scroll the guide.
+Choose Edit Shortcuts and confirm Preferences opens directly to its shortcut editor.
+Record a temporary shortcut, cancel or revert it, and check that saved bindings
+remain intact. Check that opening Preferences from Help works and that Help remains usable offline. Login changes
 should reflect the macOS registration result. Do not revoke an everyday
 installation's permission just to exercise a fresh-user case.

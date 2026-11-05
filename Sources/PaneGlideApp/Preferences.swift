@@ -5,6 +5,8 @@ import ServiceManagement
 import PaneGlideCore
 
 @MainActor final class PreferencesModel: ObservableObject {
+    enum Page { case general, shortcuts, margins, partitions, sizing, advanced }
+    @Published var page: Page = .general
     @Published var draft: AppSettings
     @Published var selectedDisplay = ""
     @Published var message = ""
@@ -60,13 +62,13 @@ struct PreferencesView: View {
     private var geometry: Binding<LayoutSettings> { Binding(get: { model.layout }, set: { model.layout = $0 }) }
     var body: some View {
         VStack(spacing: 12) {
-            TabView {
-                general.tabItem { Label("General", systemImage: "gearshape") }
-                shortcuts.tabItem { Label("Shortcuts", systemImage: "keyboard") }
-                geometryPage { margins }.tabItem { Label("Margins", systemImage: "rectangle.inset.filled") }
-                geometryPage { partitions }.tabItem { Label("Partitions", systemImage: "rectangle.split.2x2") }
-                geometryPage { sizing }.tabItem { Label("Window Sizes", systemImage: "rectangle.split.3x1") }
-                advanced.tabItem { Label("Advanced", systemImage: "slider.horizontal.3") }
+            TabView(selection: $model.page) {
+                general.tabItem { Label("General", systemImage: "gearshape") }.tag(PreferencesModel.Page.general)
+                shortcuts.tabItem { Label("Shortcuts", systemImage: "keyboard") }.tag(PreferencesModel.Page.shortcuts)
+                geometryPage { margins }.tabItem { Label("Margins", systemImage: "rectangle.inset.filled") }.tag(PreferencesModel.Page.margins)
+                geometryPage { partitions }.tabItem { Label("Partitions", systemImage: "rectangle.split.2x2") }.tag(PreferencesModel.Page.partitions)
+                geometryPage { sizing }.tabItem { Label("Window Sizes", systemImage: "rectangle.split.3x1") }.tag(PreferencesModel.Page.sizing)
+                advanced.tabItem { Label("Advanced", systemImage: "slider.horizontal.3") }.tag(PreferencesModel.Page.advanced)
             }
             Text(model.message).font(.callout).foregroundStyle(model.message == "Settings saved." ? .secondary : .primary).frame(maxWidth: .infinity, alignment: .leading).lineLimit(3).accessibilityLabel("Settings status: " + model.message)
             HStack {
