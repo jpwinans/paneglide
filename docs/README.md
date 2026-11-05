@@ -9,7 +9,7 @@ PaneGlide runs in the macOS menu bar and acts on the focused application window.
 | [Usage](usage.md) | Default shortcuts, the three-window workflow, SnapBack, monitor transfers, and troubleshooting |
 | [AppleScript](scripting.md) | Individual window commands, grids, thirds, tiling, and cascading |
 | [Privacy](privacy.md) | Permissions, local storage, and external links |
-| [Release packaging](releasing.md) | Maintainer instructions for signed release packages |
+| [Release packaging](releasing.md) | Maintainer instructions for source archives and checksums |
 | [Tests](../Tests/README.md) | Local automated checks and native test setup |
 
 For a first setup, follow the [README walkthrough](../README.md#install), then configure

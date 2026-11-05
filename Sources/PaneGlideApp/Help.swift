@@ -94,7 +94,7 @@ struct HelpView: View {
                     if !model.settings.shortcutsEnabled { Text("Shortcuts are currently disabled. Enable them in Preferences → Shortcuts or from the menu bar.").foregroundStyle(.orange) }
                 }
                 section("3. Choose when to start") {
-                    Toggle("Start PaneGlide automatically at login", isOn: Binding(get: { model.loginState == .enabled || model.loginState == .requiresApproval }, set: model.setLogin))
+                    Toggle("Start PaneGlide automatically at login", isOn: Binding(get: { model.loginState == .enabled || model.loginState == .requiresApproval }, set: { model.setLogin($0) }))
                     Text("Optional. This switch takes effect immediately.").font(.caption).foregroundStyle(.secondary)
                     if model.loginState == .requiresApproval {
                         Text("macOS needs your approval in Login Items.")

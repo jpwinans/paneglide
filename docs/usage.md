@@ -85,15 +85,18 @@ not included in settings exports.
 ## Menu and preferences
 
 The menu offers the same positioning actions, shortcut enable/disable, Preferences,
-View on GitHub, Accessibility help, Help, About, and Quit. Hidden actions can be
-restored through the Shortcuts tab's **Show in menu** controls. **Help…** opens this
-usage guide in your browser. Successful moves are silent. If a command fails, its
+View on GitHub, Quick Start, Help, About, and Quit. Hidden actions can be
+restored through the Shortcuts tab's **Show in menu** controls. **Quick Start…**
+shows Accessibility status and startup setup. **Help…** opens the built-in guide,
+which works offline; **Edit Shortcuts…** opens Preferences directly to the shortcut
+editor. Successful moves are silent. If a command fails, its
 explanation appears at the top of the menu and clears after the next successful
 menu or shortcut action.
 
 To stop shortcuts temporarily, choose **Disable Shortcuts** in the menu. Menu and
 AppleScript actions still work. To stop the utility, choose **Quit PaneGlide**.
 Reopening PaneGlide from Finder shows Preferences, including when its icon is hidden.
+If Help is already open, use its Preferences button.
 
 ## Troubleshooting
 

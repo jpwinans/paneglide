@@ -17,7 +17,10 @@ Report security vulnerabilities through [Security](SECURITY.md), not a public is
 
 ## Set up a local checkout
 
-Use an Apple silicon Mac with macOS 14 or later and Xcode 16 or later with Swift 6.
+Use an Apple silicon Mac with macOS 14 or later and Xcode 16 or later with Swift 6
+for development and the automated Swift tests. Installing the app only needs the
+Command Line Tools; the test suite also needs the Swift Testing module included
+with Xcode.
 Fork the repository, clone your fork, and create a branch from `main`. There are no
 third-party package dependencies.
 
@@ -30,7 +33,19 @@ The app is built at `dist/PaneGlide.app`. Follow the
 [installation guide](docs/installation.md) to install a development copy and grant
 Accessibility access. A local ad-hoc build needs no developer account. If you use
 a signing identity, configure it locally with `CODE_SIGN_IDENTITY`; keep signing
-keys and credentials out of the repository.
+keys and credentials out of the repository. For example:
+
+```sh
+CODE_SIGN_IDENTITY='your local signing identity' bash install.sh
+```
+
+Using the same local signing identity can preserve Accessibility authorization
+between builds. It is optional and is not used to distribute public binaries.
+Without it, use the default local ad-hoc signature and refresh the Accessibility
+entry if macOS requests it. `bash install.sh --app "$PWD/dist/PaneGlide.app"`
+installs an already-built bundle. Omit `CONFIGURATION=release` from the build script
+for a debug build with fixture-test controls. `PANEGLIDE_VERSION=major.minor.patch`
+can override the local app version; release archives always use the committed plist.
 
 ## Make a focused change
 

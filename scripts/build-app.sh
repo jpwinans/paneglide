@@ -7,8 +7,8 @@ configuration="${CONFIGURATION:-debug}"
 export CLANG_MODULE_CACHE_PATH="${CLANG_MODULE_CACHE_PATH:-$project_root/.build/ModuleCache}"
 
 build_options=(--disable-sandbox --configuration "$configuration" --arch arm64)
-swift build "${build_options[@]}" --product PaneGlide
-binary_directory="$(swift build "${build_options[@]}" --show-bin-path)"
+/usr/bin/xcrun swift build "${build_options[@]}" --product PaneGlide
+binary_directory="$(/usr/bin/xcrun swift build "${build_options[@]}" --show-bin-path)"
 mkdir -p "$project_root/dist"
 staging_root="$(mktemp -d "$project_root/dist/.paneglide-build.XXXXXX")"
 trap 'rm -rf "$staging_root"' EXIT
@@ -30,7 +30,7 @@ signing_options=(--force --options runtime --sign "${CODE_SIGN_IDENTITY:--}")
 if [[ "${CODE_SIGN_IDENTITY:--}" != - ]]; then signing_options+=(--timestamp); fi
 codesign "${signing_options[@]}" "$bundle"
 codesign --verify --strict "$bundle"
-/usr/bin/lipo -verify_arch arm64 "$bundle/Contents/MacOS/PaneGlide"
+/usr/bin/lipo "$bundle/Contents/MacOS/PaneGlide" -verify_arch arm64
 # Replace the complete bundle only after validation, preserving the last valid
 # build on failure and avoiding reuse of a development bundle's directory identity.
 /usr/bin/python3 - "$bundle" "$destination" <<'PY'

@@ -18,6 +18,8 @@ windows. AppleScript hosts may also need macOS Automation permission to address 
 It has no account system, telemetry, or in-app updater. See [Privacy](docs/privacy.md)
 for local storage and window-data handling.
 
-Development builds are for local use. Public app binaries require Developer ID
-signing and notarization; source-only releases are labeled as such. Signing keys
-and notarization credentials are never part of the repository.
+Releases contain source code and a checksum. Users build locally with Apple's free
+developer tools; no prebuilt app or distribution certificate is provided. Download
+source from the official repository or its Releases page. Signing keys and private
+credentials are never part of the repository. See [installation](docs/installation.md)
+for the local build and permission setup.

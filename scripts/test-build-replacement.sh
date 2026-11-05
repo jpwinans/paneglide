@@ -9,7 +9,7 @@ new_bundle_inode="$(stat -f '%i' 'dist/PaneGlide.app')"
 codesign --verify --strict 'dist/PaneGlide.app'
 signature_details="$(codesign --display --verbose=4 'dist/PaneGlide.app' 2>&1)"
 grep -q 'flags=.*runtime' <<< "$signature_details" || { echo 'FAIL: app does not enable hardened runtime' >&2; exit 1; }
-lipo -verify_arch arm64 'dist/PaneGlide.app/Contents/MacOS/PaneGlide'
+lipo 'dist/PaneGlide.app/Contents/MacOS/PaneGlide' -verify_arch arm64
 cmp LICENSE 'dist/PaneGlide.app/Contents/Resources/LICENSE'
 icon_name="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIconFile' 'dist/PaneGlide.app/Contents/Info.plist')"
 icon_check_directory="$(mktemp -d "$PWD/.build/icon-check.XXXXXX")"

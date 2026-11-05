@@ -1,6 +1,8 @@
 # Support
 
-Start with the [README](README.md) for setup and everyday use. The detailed guides
+Open **Help…** in the menu bar for offline guidance, or **Quick Start…** for
+Accessibility and startup setup. Help’s **Edit Shortcuts…** opens the shortcut
+editor directly. Start with the [README](README.md) for setup and everyday use. The detailed guides
 cover [configuration](docs/configuration.md), [troubleshooting](docs/usage.md#troubleshooting),
 and [AppleScript](docs/scripting.md).
 
