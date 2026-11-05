@@ -70,7 +70,7 @@ struct PreferencesView: View {
             }
             Text(model.message).font(.callout).foregroundStyle(model.message == "Settings saved." ? .secondary : .primary).frame(maxWidth: .infinity, alignment: .leading).lineLimit(3).accessibilityLabel("Settings status: " + model.message)
             HStack {
-                Button("Import…", action: model.importSettings)
+                Button("Import Saved Settings…", action: model.importSettings)
                 Button("Export Saved Settings…", action: model.exportSettings)
                 Spacer()
                 Button("Revert Unsaved Changes") { model.draft = model.controller.store.settings; model.message = "" }
@@ -88,20 +88,15 @@ struct PreferencesView: View {
                 if model.loginState == .requiresApproval { Button("Open Login Items Settings…") { SMAppService.openSystemSettingsLoginItems() } }
                 Toggle("Show preferences on launch", isOn: $model.draft.showPreferencesOnLaunch)
                 Button("Accessibility Access…") { model.controller.showPermissionHelp() }
-                HStack {
-                    Text(model.accessibilityGranted ? "Accessibility access is enabled." : "Accessibility access is not available to this process.").foregroundStyle(model.accessibilityGranted ? Color.secondary : Color.orange)
-                    Button("Refresh Access Status", action: model.refreshSystemState)
-                }
+                Text(model.accessibilityGranted ? "Accessibility access is enabled." : "Accessibility access is not enabled.").foregroundStyle(model.accessibilityGranted ? Color.secondary : Color.orange)
                 #if DEBUG
                 Button("Run Disposable Fixture Checks (Debug)") { model.controller.runIntegrationTest(terminate: false); model.refreshSystemState() }
                 #endif
-                Text("Move and resize the frontmost window using shortcuts or the menu bar. Full Screen fills the usable desktop without creating a Space.").foregroundStyle(.secondary)
+                Text("Move and resize the frontmost window using shortcuts or the menu bar. Maximize fills the usable desktop without creating a Space.").foregroundStyle(.secondary)
             }
             Section("Appearance") {
                 Toggle("Show PaneGlide in menu bar", isOn: $model.draft.menuVisible)
                 Text("If you hide the icon, reopen PaneGlide from Finder to return to preferences.").font(.caption).foregroundStyle(.secondary)
-                Toggle("Show tooltips", isOn: $model.draft.showTooltips)
-                Toggle("Show visual action overlay", isOn: $model.draft.showOverlay)
             }
         }.formStyle(.grouped)
     }
@@ -211,23 +206,23 @@ struct PreferencesView: View {
             Section("Best-effort behavior") {
                 Toggle("Center windows that do not resize fully", isOn: $model.draft.centerConstrainedWindows)
                 Toggle("Try to keep windows in bounds", isOn: $model.draft.keepInBounds)
-                Text("Applications can impose minimum sizes or fixed dimensions. PaneGlide reads the actual result and reports a constraint when the requested layout cannot be reached.").foregroundStyle(.secondary)
+                Text("Applications can impose minimum sizes or fixed dimensions. PaneGlide uses the closest size the application allows.").foregroundStyle(.secondary)
             }
         }.formStyle(.grouped)
     }
     private func number(_ title: String, _ value: Binding<Double>) -> some View {
         HStack { Text(title); NumberInput(value: value).accessibilityLabel(title + " points").frame(width: 65); Text("pt").foregroundStyle(.secondary) }
-            .help(model.draft.showTooltips ? "Distance in logical macOS points." : "")
+            .help("Distance in logical macOS points.")
     }
     private func percentage(_ title: String, _ value: Binding<Double>) -> some View {
         HStack { Text(title); NumberInput(value: Binding(get: { value.wrappedValue * 100 }, set: { value.wrappedValue = $0 / 100 })).accessibilityLabel(title + " percent").frame(width: 65); Text("%") }
-            .help(model.draft.showTooltips ? "Divider position as a percentage of the usable desktop." : "")
+            .help("Divider position as a percentage of the usable desktop.")
     }
     private func dimension(_ title: String, _ value: Binding<PaneGlideCore.Dimension>) -> some View {
         HStack {
             Text(title); NumberInput(value: value.value).accessibilityLabel(title).frame(width: 65)
             Picker(title + " units", selection: value.unit) { Text("%").tag(SizeUnit.percent); Text("points").tag(SizeUnit.points) }.labelsHidden().frame(width: 90)
-        }.help(model.draft.showTooltips ? "Choose a percentage of usable desktop size or fixed macOS points." : "")
+        }.help("Choose a percentage of usable desktop size or fixed macOS points.")
     }
 }
 

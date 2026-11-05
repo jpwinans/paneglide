@@ -3,7 +3,7 @@ with timeout of 15 seconds
  tell application id "com.jpwinans.size-up"
   try
   set results to {}
-  repeat with commandAction in {Left, Right, Up, Down, Upper Left, Upper Right, Lower Left, Lower Right, Full Screen, Center, Prev Monitor, Next Monitor, Move Left, Move Right, Move Up, Move Down, Move Upper Left, Move Upper Right, Move Lower Left, Move Lower Right, Move Center, Third Left, Third Center, Third Right, Third Upper, Third Middle, Third Lower}
+  repeat with commandAction in {Left, Right, Up, Down, Upper Left, Upper Right, Lower Left, Lower Right, Maximize, Center, Prev Monitor, Next Monitor, Move Left, Move Right, Move Up, Move Down, Move Upper Left, Move Upper Right, Move Lower Left, Move Lower Right, Move Center, Third Left, Third Center, Third Right, Third Upper, Third Middle, Third Lower}
    set end of results to do action commandAction
   end repeat
   set end of results to send to monitor 1
@@ -21,6 +21,9 @@ with timeout of 15 seconds
   set cascadeFrames to cascade windows
   if (count of cascadeFrames) is not 1 or (count of item 1 of cascadeFrames) is not 4 then error "Cascade did not return the fixture rectangle."
   set end of results to cascadeFrames
+  set legacyMaximizedFrame to do action Full Screen
+  if legacyMaximizedFrame is not item 9 of results then error "Maximize and its scripting alias disagree."
+  set end of results to legacyMaximizedFrame
   set end of results to do action SnapBack
   return results
   on error messageText number errorCode

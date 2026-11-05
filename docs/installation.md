@@ -26,12 +26,12 @@ shortcuts, so only one app responds to each key combination.
 
 1. Open System Settings → Privacy & Security → Accessibility.
 2. Add your installed **PaneGlide.app** if it is not listed, then enable it.
-3. In PaneGlide → Preferences → General, choose **Refresh Access Status**. The status
-   should read **Accessibility access is enabled**.
+3. Return to PaneGlide → Preferences → General. The status refreshes automatically
+   and should read **Accessibility access is enabled**.
 4. Focus an ordinary application window and try a positioning shortcut.
 
 If access appears enabled but actions fail after replacing a development build,
-quit PaneGlide and reopen the installed copy. If refreshing still reports no access,
+quit PaneGlide and reopen the installed copy. If General still reports no access,
 remove only the new **PaneGlide** entry from Accessibility, add the installed app
 again, and enable it. A consistent signing identity reduces the need to refresh
 this grant between builds.

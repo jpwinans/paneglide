@@ -58,7 +58,6 @@ private final class ScriptRectangle: NSObject {
                     controller.statusItem?.button?.performClick(nil); return nil
                 default: throw SettingsError.invalid("Unsupported scripting command.")
                 }
-                if result.constrained { controller.feedback.show("The app limited the requested scripted layout.", enabled: controller.store.settings.showOverlay) }
                 return .rectangle([result.actual.minX, result.actual.minY, result.actual.width, result.actual.height])
             } catch {
                 scriptErrorNumber = -10000; scriptErrorString = error.localizedDescription

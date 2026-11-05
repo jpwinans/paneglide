@@ -19,7 +19,7 @@ Preferences → Shortcuts lets you change or clear any of them.
 | Upper Right | ⌃⌥⇧↑ |
 | Lower Left | ⌃⌥⇧↓ |
 | Lower Right | ⌃⌥⇧→ |
-| Full Screen | ⌃⌥⌘M |
+| Maximize | ⌃⌥⌘M |
 | Center | ⌃⌥⌘C |
 | Previous Monitor | ⌃⌥← |
 | Next Monitor | ⌃⌥→ |
@@ -27,7 +27,7 @@ Preferences → Shortcuts lets you change or clear any of them.
 
 A held shortcut key performs one action. Release and press again for a second action.
 Left/Right and the four corner actions use the configured dividers, margins, and gaps.
-**Full Screen** fills the usable desktop; it does not create a macOS full-screen Space.
+**Maximize** fills the usable desktop; it does not create a macOS full-screen Space.
 
 ## Center with two side windows
 
@@ -86,7 +86,10 @@ not included in settings exports.
 
 The menu offers the same positioning actions, shortcut enable/disable, Preferences,
 View on GitHub, Accessibility help, Help, About, and Quit. Hidden actions can be
-restored through the Shortcuts tab's **Show in menu** controls.
+restored through the Shortcuts tab's **Show in menu** controls. **Help…** opens this
+usage guide in your browser. Successful moves are silent. If a command fails, its
+explanation appears at the top of the menu and clears after the next successful
+menu or shortcut action.
 
 To stop shortcuts temporarily, choose **Disable Shortcuts** in the menu. Menu and
 AppleScript actions still work. To stop the utility, choose **Quit PaneGlide**.
@@ -96,7 +99,7 @@ Reopening PaneGlide from Finder shows Preferences, including when its icon is hi
 
 | Symptom | What to check |
 | --- | --- |
-| No window moves | Confirm Accessibility in General with Refresh Access Status; follow [access setup](installation.md#enable-accessibility) if needed |
+| No window moves | Check the Accessibility status in General; follow [access setup](installation.md#enable-accessibility) if needed |
 | A shortcut does nothing or reports a conflict | Enable shortcuts; quit competing window utilities or assign a different binding, then Apply |
 | Left/Right always uses the normal split | Enable the alternate for the current display, Apply, then release and press the same shortcut again |
 | A window does not fit the requested region | The app may enforce a minimum size, aspect ratio, or resize increment; try a wider region or adjust Advanced options |

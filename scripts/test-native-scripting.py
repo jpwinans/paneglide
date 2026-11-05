@@ -38,6 +38,6 @@ report = {"exit": result.returncode, "beforeAppKit": before, "afterAppKit": afte
 if result.returncode != 0 or before != after:
     raise SystemExit("FAIL: " + json.dumps(report))
 frames = json.loads(result.stdout.replace("{", "[").replace("}", "]"))
-assert len(frames) == 35, "Some script actions did not return a result"
+assert len(frames) == 36, "Some script actions did not return a result"
 assert len(frames[32][0]) == 4 and len(frames[33][0]) == 4, "Invalid batch rectangles"
-print("PASS: 35 script commands returned values; point/rectangle and batch assertions passed; baseline restored.")
+print("PASS: 36 script commands returned values; Maximize alias verified; point/rectangle and batch assertions passed; baseline restored.")

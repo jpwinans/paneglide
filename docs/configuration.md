@@ -14,10 +14,8 @@ part of the preference draft.
 | --- | --- |
 | Start PaneGlide automatically at login | Registers or unregisters the installed app with macOS immediately; the status below shows the result |
 | Show preferences on launch | Opens Preferences when the app starts |
-| Accessibility Access… / Refresh Access Status | Opens access guidance or checks the current grant |
+| Accessibility Access… | Opens access guidance; status refreshes when you return to the app |
 | Show PaneGlide in menu bar | Shows or hides the status icon; reopen the app from Finder to recover Preferences when hidden |
-| Show tooltips | Enables explanatory help on supported controls |
-| Show visual action overlay | Briefly shows action feedback; errors still display useful messages |
 
 ## Shortcuts
 
@@ -120,8 +118,7 @@ Alternate widths start disabled in a new configuration.
 | Try to keep windows in bounds | Keeps windows within the available display bounds where possible |
 
 These are best-effort options. An app can refuse resizing or impose minimum sizes,
-fixed proportions, or resize increments. PaneGlide uses the actual result and reports
-when the app limits the requested layout.
+fixed proportions, or resize increments. PaneGlide uses the closest size the application allows.
 
 ## Save, export, and import
 
@@ -129,7 +126,7 @@ Saved preferences live at `~/Library/Application Support/PaneGlide/settings.json
 Use the preference controls rather than editing this file while the app is running.
 
 **Export Saved Settings…** exports the saved configuration, including display
-profiles. Unsaved draft changes are not included. **Import…** loads a settings file
+profiles. Unsaved draft changes are not included. **Import Saved Settings…** loads a settings file
 into the draft; review it and choose Apply to save it. Invalid imports do not replace
 the current configuration. Profiles for disconnected displays are retained.
 
