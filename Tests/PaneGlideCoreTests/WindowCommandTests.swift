@@ -162,19 +162,6 @@ import PaneGlideCore
     #expect(throws: WindowError.unsupported) { try engine.execute(.left, settings: AppSettings()) }
 }
 
-@Test @MainActor func drawersShareTheTargetRegionAndSnapBackRestoresParent() throws {
-    let system = TestWindowSystem()
-    system.windows["one"]!.frame = CGRect(x: 300, y: 100, width: 700, height: 500)
-    system.windows["one"]!.drawerInsets = WindowInsets(left: 200)
-    let engine = WindowCommands(system: system)
-    var settings = AppSettings(); settings.layout.alternateLeft.enabled = true
-    #expect(try engine.execute(.left, settings: settings).actual == CGRect(x: 200, y: 0, width: 800, height: 1000))
-    #expect(try engine.execute(.left, settings: settings).actual == CGRect(x: 200, y: 0, width: 300, height: 1000))
-    #expect(try engine.execute(.snapBack, settings: settings).actual == CGRect(x: 300, y: 100, width: 700, height: 500))
-    settings.accountForDrawers = false
-    #expect(try engine.execute(.left, settings: settings).actual == CGRect(x: 0, y: 0, width: 1000, height: 1000))
-}
-
 @Test @MainActor func fractionalBoundariesAlignToDisplayPixels() throws {
     let system = TestWindowSystem()
     system.screens = [Display(id: "retina", visibleFrame: CGRect(x: -1001, y: -101, width: 1001, height: 701), scale: 2)]

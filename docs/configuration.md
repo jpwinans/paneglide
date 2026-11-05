@@ -118,7 +118,6 @@ Alternate widths start disabled in a new configuration.
 | Resize windows proportionally when changing monitors | Scales window size to the destination's usable area; when off, retains size where it fits |
 | Center windows that do not resize fully | Centers an app's constrained window within the requested region |
 | Try to keep windows in bounds | Keeps windows within the available display bounds where possible |
-| Account for attached legacy drawers | Includes an exposed attached drawer's bounds when positioning its parent; modern sidebars are part of their window |
 
 These are best-effort options. An app can refuse resizing or impose minimum sizes,
 fixed proportions, or resize increments. PaneGlide uses the actual result and reports

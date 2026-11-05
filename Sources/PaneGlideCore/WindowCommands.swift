@@ -19,7 +19,6 @@ public struct ManagedWindow: Equatable, Sendable {
     public var resizable = true
     public var fullScreen = false
     public var minimized = false
-    public var drawerInsets = WindowInsets()
     public init(id: String, frame: CGRect) { self.id = id; self.frame = frame }
 }
 public enum WindowError: Error, LocalizedError, Equatable {
@@ -62,8 +61,6 @@ public struct CommandResult: Sendable {
         let window = try target.map { try system.window(id: $0) } ?? system.focusedWindow()
         guard let window else { throw WindowError.noWindow }
         guard window.movable, !window.fullScreen, !window.minimized else { throw WindowError.unsupported }
-        let insets = settings.accountForDrawers ? window.drawerInsets : WindowInsets()
-        let effectiveFrame = insets.expanding(window.frame)
         let displays = system.displays()
         guard let display = displays.max(by: { intersectionArea($0.visibleFrame, window.frame) < intersectionArea($1.visibleFrame, window.frame) }) else { throw WindowError.noDisplay }
         if let onMonitor, !(1...displays.count).contains(onMonitor) { throw SettingsError.invalid("Monitor index is out of range; indexes start at one.") }
@@ -72,7 +69,7 @@ public struct CommandResult: Sendable {
         try layout.validate(screen: layoutDisplay.visibleFrame)
         var requested: CGRect
         if let geometry {
-            let current = effectiveFrame.offsetBy(dx: layoutDisplay.visibleFrame.minX - display.visibleFrame.minX, dy: layoutDisplay.visibleFrame.minY - display.visibleFrame.minY)
+            let current = window.frame.offsetBy(dx: layoutDisplay.visibleFrame.minX - display.visibleFrame.minX, dy: layoutDisplay.visibleFrame.minY - display.visibleFrame.minY)
             let frame = try geometry.frame(current: current, screen: layoutDisplay.visibleFrame, settings: layout)
             requested = settings.keepInBounds ? frame.fitting(in: layoutDisplay.visibleFrame, resize: window.resizable) : frame
         } else if action == .snapBack {
@@ -94,20 +91,19 @@ public struct CommandResult: Sendable {
             let destinationArea = Layout.frame(for: .maximize, current: window.frame, screen: destination.visibleFrame, settings: destinationSettings)
             let sx = destinationArea.width / sourceArea.width
             let sy = destinationArea.height / sourceArea.height
-            let mapped = CGRect(x: destinationArea.minX + (effectiveFrame.minX - sourceArea.minX) * sx,
-                y: destinationArea.minY + (effectiveFrame.minY - sourceArea.minY) * sy,
-                width: effectiveFrame.width * (settings.resizeProportionally ? sx : 1),
-                height: effectiveFrame.height * (settings.resizeProportionally ? sy : 1))
+            let mapped = CGRect(x: destinationArea.minX + (window.frame.minX - sourceArea.minX) * sx,
+                y: destinationArea.minY + (window.frame.minY - sourceArea.minY) * sy,
+                width: window.frame.width * (settings.resizeProportionally ? sx : 1),
+                height: window.frame.height * (settings.resizeProportionally ? sy : 1))
             requested = settings.keepInBounds ? mapped.fitting(in: destinationArea, resize: window.resizable) : mapped
         } else {
-            requested = Layout.frame(for: action, current: effectiveFrame, screen: layoutDisplay.visibleFrame, settings: layout)
+            requested = Layout.frame(for: action, current: window.frame, screen: layoutDisplay.visibleFrame, settings: layout)
         }
-        if action != .snapBack || geometry != nil { requested = insets.insetting(requested) }
         if action != .snapBack || geometry != nil {
             let scale = displays.max(by: { intersectionArea($0.visibleFrame, requested) < intersectionArea($1.visibleFrame, requested) })?.scale ?? 1
             requested = requested.alignedToPixels(scale: scale)
         }
-        guard requested.width > 0, requested.height > 0 else { throw SettingsError.invalid("The attached drawer leaves no room for the parent window in this layout.") }
+        guard requested.width > 0, requested.height > 0 else { throw SettingsError.invalid("The requested layout leaves no room for the window.") }
         var result: ManagedWindow
         do {
             result = try system.apply(requested, to: window.id)
@@ -116,10 +112,7 @@ public struct CommandResult: Sendable {
                 adjusted.origin = CGPoint(x: requested.midX - result.frame.width / 2, y: requested.midY - result.frame.height / 2)
             }
             if settings.keepInBounds, let actualDisplay = displays.max(by: { intersectionArea($0.visibleFrame, requested) < intersectionArea($1.visibleFrame, requested) }) {
-                let actualInsets = settings.accountForDrawers ? result.drawerInsets : WindowInsets()
-                let combined = actualInsets.expanding(adjusted)
-                let bounded = combined.fitting(in: actualDisplay.visibleFrame, resize: false)
-                adjusted = adjusted.offsetBy(dx: bounded.minX - combined.minX, dy: bounded.minY - combined.minY)
+                adjusted = adjusted.fitting(in: actualDisplay.visibleFrame, resize: false)
             }
             if !adjusted.approximatelyEquals(result.frame) { result = try system.apply(adjusted, to: window.id) }
         } catch {

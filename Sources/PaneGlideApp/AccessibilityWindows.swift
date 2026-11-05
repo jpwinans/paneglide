@@ -6,7 +6,6 @@ import PaneGlideCore
     private final class Entry {
         let element: AXUIElement
         let pid: pid_t
-        var drawers: [CGWindowID: AXUIElement] = [:]
         init(element: AXUIElement, pid: pid_t) { self.element = element; self.pid = pid }
     }
     private var entries: [String: Entry] = [:]
@@ -89,73 +88,9 @@ import PaneGlideCore
         result.resizable = resize.boolValue
         result.minimized = attribute(kAXMinimizedAttribute, of: entry.element) ?? false
         result.fullScreen = attribute("AXFullScreen", of: entry.element) ?? false
-        let children: [AXUIElement] = (attribute(kAXChildrenAttribute, of: entry.element) ?? [])
-            + attachedDrawers(to: entry, parentFrame: result.frame)
-        var combined = result.frame
-        for child in children.prefix(64) {
-            let role: String? = attribute(kAXRoleAttribute, of: child)
-            guard role == kAXDrawerRole, let position: AXValue = attribute(kAXPositionAttribute, of: child),
-                  let size: AXValue = attribute(kAXSizeAttribute, of: child), AXValueGetType(position) == .cgPoint, AXValueGetType(size) == .cgSize else { continue }
-            var point = CGPoint.zero; var sizeValue = CGSize.zero
-            guard AXValueGetValue(position, .cgPoint, &point), AXValueGetValue(size, .cgSize, &sizeValue),
-                  sizeValue.width > 0, sizeValue.height > 0 else { continue }
-            combined = combined.union(CGRect(origin: point, size: sizeValue))
-        }
-        result.drawerInsets = WindowInsets(top: result.frame.minY - combined.minY, left: result.frame.minX - combined.minX,
-                                           bottom: combined.maxY - result.frame.maxY, right: combined.maxX - result.frame.maxX)
         let subrole: String? = attribute(kAXSubroleAttribute, of: entry.element)
         if subrole == kAXDialogSubrole || subrole == kAXSystemDialogSubrole { result.movable = false }
         return result
-    }
-    private func attachedDrawers(to entry: Entry, parentFrame: CGRect) -> [AXUIElement] {
-        // Modern AppKit omits legacy NSDrawer windows from AXChildren/AXWindows.
-        // On-screen bounds locate candidates; AX role and an exact parent match
-        // establish attachment. An adjacent ordinary window is never a drawer.
-        let snapshot = CGWindowListCopyWindowInfo([.optionOnScreenOnly, .excludeDesktopElements], kCGNullWindowID) as? [[String: Any]] ?? []
-        let candidates: [(id: CGWindowID, frame: CGRect)] = snapshot.compactMap { info in
-            guard (info[kCGWindowOwnerPID as String] as? NSNumber)?.int32Value == entry.pid,
-                  (info[kCGWindowLayer as String] as? NSNumber)?.intValue == 0,
-                  let number = (info[kCGWindowNumber as String] as? NSNumber)?.uint32Value,
-                  let bounds = info[kCGWindowBounds as String] as? [String: Any],
-                  let frame = CGRect(dictionaryRepresentation: bounds as CFDictionary) else { return nil }
-            return (number, frame)
-        }
-        let visibleIDs = Set(candidates.map(\.id))
-        entry.drawers = entry.drawers.filter { visibleIDs.contains($0.key) }
-        guard !candidates.isEmpty else { return [] }
-        let app = AXUIElementCreateApplication(entry.pid)
-        AXUIElementSetMessagingTimeout(app, 0.03)
-        let deadline = ContinuousClock.now.advanced(by: .milliseconds(75))
-        var found: [AXUIElement] = []
-        for candidate in candidates.prefix(8) {
-            guard ContinuousClock.now < deadline else { break }
-            if let cached = entry.drawers[candidate.id] {
-                let parent: AXUIElement? = attribute(kAXParentAttribute, of: cached)
-                if let parent, CFEqual(parent, entry.element) { found.append(cached); continue }
-                entry.drawers.removeValue(forKey: candidate.id)
-            }
-            let frame = candidate.frame
-            guard !parentFrame.contains(frame) else { continue }
-            var hit: AXUIElement?
-            guard AXUIElementCopyElementAtPosition(app, Float(frame.midX), Float(frame.midY), &hit) == .success else { continue }
-            for _ in 0..<6 {
-                guard ContinuousClock.now < deadline, let element = hit,
-                      !CFEqual(element, entry.element) else { break }
-                AXUIElementSetMessagingTimeout(element, 0.03)
-                guard let role: String = attribute(kAXRoleAttribute, of: element) else { break }
-                let parent: AXUIElement? = attribute(kAXParentAttribute, of: element)
-                if role == kAXDrawerRole {
-                    if let parent, CFEqual(parent, entry.element) {
-                        entry.drawers[candidate.id] = element
-                        found.append(element)
-                    }
-                    break
-                }
-                if role == kAXWindowRole || role == kAXApplicationRole { break }
-                hit = parent
-            }
-        }
-        return found
     }
     func displays() -> [Display] {
         let top = NSScreen.screens.first?.frame.maxY ?? 0
@@ -187,8 +122,8 @@ import PaneGlideCore
             }
             guard let value = AXValueCreate(.cgPoint, &point) else { throw WindowError.unavailable }
             let error = AXUIElementSetAttributeValue(entry.element, kAXPositionAttribute as CFString, value)
-            // Legacy AppKit drawers can report generic failure after moving the
-            // parent successfully. Read back before treating that response as failure.
+            // Some apps report generic failure after moving successfully. Read the
+            // actual frame before treating that response as a failed operation.
             guard error == .success || error == .failure else { throw WindowError.unavailable }
             positionReportedFailure = positionReportedFailure || error == .failure
             Thread.sleep(forTimeInterval: 0.015)
