@@ -18,6 +18,7 @@ mkdir -p "$bundle/Contents/MacOS" "$bundle/Contents/Resources"
 cp "$binary_directory/PaneGlide" "$bundle/Contents/MacOS/PaneGlide"
 cp Resources/Info.plist "$bundle/Contents/Info.plist"
 cp Resources/PaneGlide.sdef "$bundle/Contents/Resources/PaneGlide.sdef"
+bash scripts/build-icon.sh "$bundle/Contents/Resources/AppIcon.icns"
 cp LICENSE "$bundle/Contents/Resources/LICENSE"
 if [[ -n "${PANEGLIDE_VERSION:-}" ]]; then
     [[ "$PANEGLIDE_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "PANEGLIDE_VERSION must be major.minor.patch" >&2; exit 1; }

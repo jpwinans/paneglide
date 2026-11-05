@@ -26,7 +26,8 @@ bash scripts/test-build-replacement.sh
 ```
 
 The command builds the app, verifies its plist/signature/arm64 architecture,
-and checks replacement of the complete output bundle, hardened runtime, and the bundled license. It writes `dist/PaneGlide.app`.
+and checks replacement of the complete output bundle, hardened runtime, the bundled
+license, and all standard and Retina icon sizes. It writes `dist/PaneGlide.app`.
 ## Native window tests
 
 Follow [Native tests](Native/README.md) to exercise real windows using the disposable
