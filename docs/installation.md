@@ -112,6 +112,7 @@ PaneGlide has no built-in updater. Use **View on GitHub…** for new releases.
 | `install.sh` cannot be found | Open Terminal in the extracted folder containing `install.sh`; use the `cd ` and drag step above |
 | Developer tools are missing | Run `xcode-select --install`, finish the dialog, then retry |
 | Swift 6 or later is required | Update Command Line Tools in System Settings → General → Software Update, or install Xcode 16+ and select its Command Line Tools in Xcode → Settings → Locations |
+| `SwiftUIMacros.StateMacro` or a missing `SwiftUIMacros` plugin | Download PaneGlide 1.2.1 or later and run the installer from that newly extracted folder; these versions work without that plugin |
 | Xcode setup or license is incomplete | Open Xcode and complete its setup, then retry |
 | The app is already installed | Run the installer normally; it backs up and replaces the existing PaneGlide app |
 | Another app occupies the destination | Move or rename that unrelated app, or choose another Applications folder; the installer will not replace it |

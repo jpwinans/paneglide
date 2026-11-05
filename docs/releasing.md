@@ -14,6 +14,7 @@ Swift Testing module is not included in every Command Line Tools package.
 
    ```sh
    bash scripts/test.sh
+   bash scripts/test-command-line-build.sh
    CONFIGURATION=release bash scripts/build-app.sh
    bash scripts/test-install.sh
    bash scripts/test-package.sh

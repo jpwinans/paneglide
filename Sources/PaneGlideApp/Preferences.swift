@@ -228,9 +228,13 @@ struct PreferencesView: View {
     }
 }
 
+// Select the existing property-wrapper type. Newer SDKs also declare a State
+// macro whose plugin is absent from some standalone Command Line Tools packages.
+private typealias TextInputState = SwiftUI.State<String>
+
 private struct NumberInput: View {
     @Binding var value: Double
-    @State private var text = ""
+    @TextInputState private var text = ""
     var body: some View {
         TextField("", text: $text).textFieldStyle(.roundedBorder)
             .onAppear { text = value.formatted(.number.grouping(.never)) }

@@ -21,6 +21,24 @@ To select a test, pass Swift's filter option through the script:
 bash scripts/test.sh --filter leftUsesUsableDesktop
 ```
 
+## Compiler compatibility
+
+```sh
+bash scripts/test-command-line-build.sh
+```
+
+This type-checks the production core and app using the selected macOS SDK, without
+loading SDK macro plugins. It catches dependencies on plugins supplied by full
+Xcode but missing from some standalone Command Line Tools packages. Run it with a
+current Xcode SDK as well as the standalone tools:
+
+```sh
+DEVELOPER_DIR=/Library/Developer/CommandLineTools bash scripts/test-command-line-build.sh
+```
+
+This is a compiler check, not an installed-app or runtime test. Also build and
+install a clean source archive with the Command Line Tools before a release.
+
 ## Build and packaging checks
 
 ```sh
