@@ -86,7 +86,7 @@ available only after access is granted. Closing setup without completing it shou
 leave it available on the next launch. Existing configured installations with
 Accessibility access should start quietly.
 
-Open Quick Start and Help from the menu. Check both tabs and scroll the guide.
+Open Quick Start from Preferences → General and from the menu. Open Help from the menu. Check both tabs and scroll the guide.
 Choose Edit Shortcuts and confirm Preferences opens directly to its shortcut editor.
 Record a temporary shortcut, cancel or revert it, and check that saved bindings
 remain intact. Check that opening Preferences from Help works and that Help remains usable offline. Login changes

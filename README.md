@@ -94,7 +94,7 @@ Closing Preferences discards unsaved changes. The login switch takes effect imme
 - Enable **Show preferences on launch** if you want the settings window at startup.
 - **Show PaneGlide in menu bar** controls the icon. If you hide it, reopen PaneGlide
   from Finder to reach Preferences again.
-- **Accessibility Access…** provides permission guidance. No Screen Recording
+- **Quick Start…** opens setup guidance for Accessibility, shortcuts, and startup. No Screen Recording
   permission is needed. See [Privacy](docs/privacy.md) for how window data is handled.
 
 ### Shortcuts: change keys and menu items

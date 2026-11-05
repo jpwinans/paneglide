@@ -14,7 +14,7 @@ part of the preference draft.
 | --- | --- |
 | Start PaneGlide automatically at login | Registers or unregisters the installed app with macOS immediately; the status below shows the result |
 | Show preferences on launch | Opens Preferences when the app starts |
-| Accessibility Access… | Opens access guidance; status refreshes when you return to the app |
+| Quick Start… | Opens setup guidance for Accessibility, shortcuts, and startup; access status refreshes when you return to the app |
 | Show PaneGlide in menu bar | Shows or hides the status icon; reopen the app from Finder to recover Preferences when hidden |
 
 ## Shortcuts

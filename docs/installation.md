@@ -47,7 +47,8 @@ managers or disable their matching shortcuts before using PaneGlide.
 4. Choose **Start Using PaneGlide**. Focus a normal window in another app, then press
    **Control–Option–Command–Left**. Press **Control–Option–Command–/** to restore it.
 
-You can reopen Quick Start from the menu at any time. Help includes **Edit Shortcuts…**,
+You can reopen Quick Start from the menu or the **Quick Start…** button in
+**Preferences → General** at any time. Help includes **Edit Shortcuts…**,
 which opens the shortcut editor directly. PaneGlide does not need Screen Recording
 permission. [Privacy](privacy.md) explains what it accesses and stores.
 
