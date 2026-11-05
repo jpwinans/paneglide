@@ -9,6 +9,8 @@ import PaneGlideCore
     @Published var accessibilityGranted: Bool
     @Published var loginState: LoginState
     @Published var settings: AppSettings
+    @Published var shortcutReadiness: ShortcutReadiness
+    @Published var shortcutIssue: String?
     @Published var message = ""
     unowned let controller: AppController
 
@@ -16,19 +18,22 @@ import PaneGlideCore
         self.controller = controller; self.page = page
         accessibilityGranted = controller.windows.trusted
         loginState = controller.login.state; settings = controller.store.settings
+        shortcutReadiness = controller.shortcutReadiness; shortcutIssue = controller.shortcutIssue
     }
     func refresh() {
         accessibilityGranted = controller.windows.trusted
         loginState = controller.login.state; settings = controller.store.settings
+        shortcutReadiness = controller.shortcutReadiness; shortcutIssue = controller.shortcutIssue
     }
     func setLogin(_ enabled: Bool) {
         do { try controller.login.setEnabled(enabled); message = "" }
         catch { message = error.localizedDescription }
         refresh()
     }
+    var canFinishSetup: Bool { controller.setup.canComplete(accessibilityGranted: accessibilityGranted, shortcuts: shortcutReadiness) }
     func finishSetup() {
         refresh()
-        if controller.setup.complete(accessibilityGranted: accessibilityGranted) { controller.helpWindow?.close() }
+        if controller.setup.complete(accessibilityGranted: accessibilityGranted, shortcuts: shortcutReadiness) { controller.helpWindow?.close() }
     }
     func openAccessibilitySettings() {
         NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility")!)
@@ -58,7 +63,7 @@ struct HelpView: View {
                 if model.page == .setup {
                     Button("Close") { model.controller.helpWindow?.close() }.keyboardShortcut(.cancelAction)
                     Button("Start Using PaneGlide", action: model.finishSetup)
-                        .disabled(!model.accessibilityGranted).keyboardShortcut(.defaultAction)
+                        .disabled(!model.canFinishSetup).keyboardShortcut(.defaultAction)
                 } else {
                     Button("Done") { model.controller.helpWindow?.close() }.keyboardShortcut(.cancelAction)
                 }
@@ -84,14 +89,14 @@ struct HelpView: View {
                         Text("After rebuilding, if access still shows as off, remove PaneGlide from that list and add the installed app again.").font(.caption).foregroundStyle(.secondary)
                     }
                 }
-                section("2. Try a shortcut") {
+                section("2. Check your shortcuts") {
+                    shortcutStatus
                     Text("Click a window in another app, then press a shortcut. PaneGlide stays in your menu bar; it has no permanent Dock icon.")
                     shortcutRow(.left)
                     shortcutRow(.center)
                     shortcutRow(.snapBack)
                     Text("⌃ Control     ⌥ Option     ⇧ Shift     ⌘ Command").font(.caption).foregroundStyle(.secondary)
                     Text("Quit other window managers or disable their matching shortcuts first. Choose Edit Shortcuts below to view or change any binding.").font(.callout).foregroundStyle(.secondary)
-                    if !model.settings.shortcutsEnabled { Text("Shortcuts are currently disabled. Enable them in Preferences → Shortcuts or from the menu bar.").foregroundStyle(.orange) }
                 }
                 section("3. Choose when to start") {
                     Toggle("Start PaneGlide automatically at login", isOn: Binding(get: { model.loginState == .enabled || model.loginState == .requiresApproval }, set: { model.setLogin($0) }))
@@ -103,6 +108,21 @@ struct HelpView: View {
                     if !model.message.isEmpty { Text(model.message).foregroundStyle(.orange) }
                 }
             }.padding(16)
+        }
+    }
+    @ViewBuilder private var shortcutStatus: some View {
+        switch model.shortcutReadiness {
+        case .ready:
+            Label("Shortcuts are ready", systemImage: "checkmark.circle.fill").foregroundStyle(.green)
+        case .disabled:
+            Text("Shortcuts are turned off. You can use menu actions, or enable shortcuts in Edit Shortcuts.")
+        case .unassigned:
+            Text("No shortcuts are assigned. You can use menu actions, or add bindings in Edit Shortcuts.")
+        case .unavailable:
+            Label("Shortcuts need attention", systemImage: "exclamationmark.triangle").foregroundStyle(.orange)
+            Text(model.shortcutIssue ?? "Shortcuts are not active. Finish recording a shortcut in Preferences, or choose Retry.")
+            Text("Quit a competing window utility or change the conflicting binding in Edit Shortcuts, then retry. You can also turn shortcuts off there to use menu actions only.").font(.callout).foregroundStyle(.secondary)
+            Button("Retry Shortcuts") { model.controller.retryShortcuts() }
         }
     }
     private var guide: some View {

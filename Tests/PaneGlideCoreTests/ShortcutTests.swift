@@ -89,3 +89,22 @@ import PaneGlideCore
     commands.receive(token: try #require(external.tokens[left]), pressed: true)
     #expect(actions.last == .right)
 }
+
+@Test @MainActor func setupReadinessFollowsActualShortcutRegistrationAndRetry() throws {
+    let system = TestHotkeys()
+    let commands = ShortcutCommands(system: system) { _ in }
+    let bindings: [WindowAction: Shortcut] = [.left: .init(123, modifiers: 7), .snapBack: .init(44, modifiers: 7)]
+    system.rejected = bindings[.left]
+    #expect(throws: SettingsError.self) { try commands.apply(bindings, enabled: true) }
+    #expect(commands.readiness(for: bindings, enabled: true) == .unavailable)
+    system.rejected = nil
+    try commands.apply(bindings, enabled: true)
+    #expect(commands.readiness(for: bindings, enabled: true) == .ready)
+    // The same keys assigned to different actions are a different configuration.
+    let swapped: [WindowAction: Shortcut] = [.snapBack: .init(123, modifiers: 7), .left: .init(44, modifiers: 7)]
+    #expect(commands.readiness(for: swapped, enabled: true) == .unavailable)
+    try commands.apply(bindings, enabled: false)
+    #expect(commands.readiness(for: bindings, enabled: false) == .disabled)
+    #expect(commands.readiness(for: bindings, enabled: true) == .unavailable)
+    #expect(commands.readiness(for: [:], enabled: true) == .unassigned)
+}

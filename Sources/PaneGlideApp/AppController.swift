@@ -16,6 +16,10 @@ import PaneGlideCore
     let hotkeys = GlobalHotkeys()
     let login = LoginItem(system: NativeLoginSystem())
     private var actionError: String?
+    private(set) var shortcutIssue: String?
+    var shortcutReadiness: ShortcutReadiness {
+        shortcutCommands.readiness(for: store.settings.shortcuts, enabled: store.settings.shortcutsEnabled)
+    }
     lazy var shortcutCommands = ShortcutCommands(system: hotkeys) { [weak self] action in self?.run(action) }
 
     func applicationDidFinishLaunching(_ notification: Notification) {
@@ -34,12 +38,11 @@ import PaneGlideCore
         hotkeys.onEvent = { [weak self] token, pressed in self?.shortcutCommands.receive(token: token, pressed: pressed) }
         NSWorkspace.shared.notificationCenter.addObserver(self, selector: #selector(resetPressedKeys), name: NSWorkspace.didWakeNotification, object: nil)
         NSWorkspace.shared.notificationCenter.addObserver(self, selector: #selector(resetPressedKeys), name: NSWorkspace.sessionDidBecomeActiveNotification, object: nil)
-        do { try shortcutCommands.apply(store.settings.shortcuts, enabled: store.settings.shortcutsEnabled) }
-        catch { showError(error) }
+        retryShortcuts()
         if let message = store.recoveryNotice { showMessage(message) }
         NotificationCenter.default.addObserver(self, selector: #selector(refreshAccessStatus), name: NSApplication.didBecomeActiveNotification, object: nil)
-        let needsSetup = setup.shouldPresent(accessibilityGranted: windows.trusted, hasSavedSettings: FileManager.default.fileExists(atPath: store.url.path) && store.recoveryNotice == nil)
-        if needsSetup { showPermissionHelp() }
+        let needsSetup = setup.shouldPresent(accessibilityGranted: windows.trusted, hasSavedSettings: FileManager.default.fileExists(atPath: store.url.path) && store.recoveryNotice == nil, shortcuts: shortcutReadiness)
+        if needsSetup || shortcutReadiness == .unavailable { showPermissionHelp() }
         else if store.settings.showPreferencesOnLaunch || ProcessInfo.processInfo.arguments.contains("--preferences") { showPreferences() }
     }
     func rebuildMenu() {
@@ -52,7 +55,8 @@ import PaneGlideCore
         statusItem?.button?.image = NSImage(systemSymbolName: "rectangle.split.3x1", accessibilityDescription: "PaneGlide")
         statusItem?.button?.toolTip = "PaneGlide"
         let menu = NSMenu(); menu.delegate = self
-        if let status = !windows.trusted ? "Accessibility access needed — open Quick Start" : actionError {
+        let shortcutStatus = shortcutReadiness == .unavailable ? "Shortcuts need attention — open Quick Start" : nil
+        if let status = !windows.trusted ? "Accessibility access needed — open Quick Start" : (shortcutStatus ?? actionError) {
             let item = NSMenuItem(title: status, action: nil, keyEquivalent: "")
             item.isEnabled = false
             menu.addItem(item); menu.addItem(.separator())
@@ -105,6 +109,14 @@ import PaneGlideCore
         helpModel?.refresh()
         rebuildMenu()
     }
+    func retryShortcuts() {
+        do {
+            try shortcutCommands.apply(store.settings.shortcuts, enabled: store.settings.shortcutsEnabled)
+            shortcutIssue = nil
+        } catch { shortcutIssue = error.localizedDescription }
+        helpModel?.refresh()
+        rebuildMenu()
+    }
     @objc private func refreshAccessStatus() { rebuildMenu() }
     @objc private func resetPressedKeys() { shortcutCommands.resetPressedKeys() }
     func applicationWillTerminate(_ notification: Notification) {
@@ -138,7 +150,7 @@ import PaneGlideCore
         }
         if let window = notification.object as? NSWindow, window === preferencesWindow {
             preferencesWindow = nil; preferencesModel = nil
-            do { try shortcutCommands.apply(store.settings.shortcuts, enabled: store.settings.shortcutsEnabled) } catch { showError(error) }
+            retryShortcuts()
         }
     }
     @objc func showHelp() { showGuide(.guide) }

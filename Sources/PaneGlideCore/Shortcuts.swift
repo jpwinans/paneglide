@@ -33,6 +33,10 @@ public struct Shortcut: Codable, Equatable, Hashable, Sendable {
     func unregister(_ token: UInt32)
 }
 
+public enum ShortcutReadiness: Equatable, Sendable {
+    case ready, disabled, unassigned, unavailable
+}
+
 @MainActor public final class ShortcutCommands {
     private let system: any HotkeySystem
     private let perform: (WindowAction) -> Void
@@ -57,6 +61,15 @@ public struct Shortcut: Codable, Equatable, Hashable, Sendable {
         }
         registrations = registrations.filter { desired.values.contains($0.key) }.merging(additions) { old, _ in old }
         actions = Dictionary(uniqueKeysWithValues: desired.compactMap { action, shortcut in registrations[shortcut].map { ($0, action) } })
+    }
+    public func readiness(for bindings: [WindowAction: Shortcut], enabled: Bool) -> ShortcutReadiness {
+        guard enabled else { return .disabled }
+        guard !bindings.isEmpty else { return .unassigned }
+        let matches = actions.count == bindings.count && bindings.allSatisfy { action, shortcut in
+            guard let token = registrations[shortcut] else { return false }
+            return actions[token] == action
+        }
+        return matches ? .ready : .unavailable
     }
     public func resetPressedKeys() { held.removeAll() }
     public func receive(token: UInt32, pressed: Bool) {

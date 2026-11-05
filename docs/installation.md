@@ -44,7 +44,10 @@ managers or disable their matching shortcuts before using PaneGlide.
    If it is not listed, click **+** and select your installed PaneGlide.app.
    **Show App in Finder** helps you locate that exact copy.
 3. Return to Quick Start. Its status should read **Accessibility access is enabled**.
-4. Choose **Start Using PaneGlide**. Focus a normal window in another app, then press
+4. Check that Quick Start says **Shortcuts are ready**. If it reports a conflict,
+   quit the competing utility or use **Edit Shortcuts…**, then **Retry Shortcuts**.
+   You can intentionally disable or clear shortcuts to use menu actions only.
+5. Choose **Start Using PaneGlide**. Focus a normal window in another app, then press
    **Control–Option–Command–Left**. Press **Control–Option–Command–/** to restore it.
 
 You can reopen Quick Start from the menu or the **Quick Start…** button in
