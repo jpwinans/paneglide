@@ -89,7 +89,7 @@ struct PreferencesView: View {
                 Text(loginDescription).font(.caption).foregroundStyle(.secondary)
                 if model.loginState == .requiresApproval { Button("Open Login Items Settings…") { SMAppService.openSystemSettingsLoginItems() } }
                 Toggle("Show preferences on launch", isOn: $model.draft.showPreferencesOnLaunch)
-                Button("Accessibility Access…") { model.controller.showPermissionHelp() }
+                Button("Quick Start…") { model.controller.showPermissionHelp() }
                 Text(model.accessibilityGranted ? "Accessibility access is enabled." : "Accessibility access is not enabled.").foregroundStyle(model.accessibilityGranted ? Color.secondary : Color.orange)
                 #if DEBUG
                 Button("Run Disposable Fixture Checks (Debug)") { model.controller.runIntegrationTest(terminate: false); model.refreshSystemState() }
