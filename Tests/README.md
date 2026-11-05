@@ -7,7 +7,7 @@ bash scripts/test.sh
 ```
 
 The Swift Testing suite covers layout geometry, display coordinates, window commands
-and SnapBack, settings validation and persistence, shortcut registration, overlays,
+and SnapBack, settings validation and persistence, shortcut registration,
 login state, and scripting geometry. It uses
 public component interfaces and literal expected results. The suite does not move
 real application windows or require Accessibility access.

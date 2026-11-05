@@ -10,7 +10,7 @@
 <enumerator name="Upper Right" code="SUur"><cocoa string-value="upperRight"/></enumerator>
 <enumerator name="Lower Left" code="SUll"><cocoa string-value="lowerLeft"/></enumerator>
 <enumerator name="Lower Right" code="SUlr"><cocoa string-value="lowerRight"/></enumerator>
-<enumerator name="Full Screen" code="SUfs"><cocoa string-value="maximize"/></enumerator>
+<enumerator name="Maximize" code="SUfs"><cocoa string-value="maximize"/><synonym name="Full Screen" hidden="yes"/></enumerator>
 <enumerator name="Center" code="SUcr"><cocoa string-value="center"/></enumerator>
 <enumerator name="Prev Monitor" code="SUpm"><cocoa string-value="previousMonitor"/></enumerator>
 <enumerator name="Next Monitor" code="SUnm"><cocoa string-value="nextMonitor"/></enumerator>

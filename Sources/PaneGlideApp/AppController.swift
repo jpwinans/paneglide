@@ -11,7 +11,7 @@ import PaneGlideCore
     var preferencesWindow: NSWindow?
     let hotkeys = GlobalHotkeys()
     let login = LoginItem(system: NativeLoginSystem())
-    let feedback = ActionFeedback(surface: NativeOverlay(), scheduler: NativeDelay())
+    private var actionError: String?
     lazy var shortcutCommands = ShortcutCommands(system: hotkeys) { [weak self] action in self?.run(action) }
 
     func applicationDidFinishLaunching(_ notification: Notification) {
@@ -47,8 +47,13 @@ import PaneGlideCore
         }
         if statusItem == nil { statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength) }
         statusItem?.button?.image = NSImage(systemSymbolName: "rectangle.split.3x1", accessibilityDescription: "PaneGlide")
-        statusItem?.button?.toolTip = store.settings.showTooltips ? "PaneGlide" : nil
+        statusItem?.button?.toolTip = "PaneGlide"
         let menu = NSMenu(); menu.delegate = self
+        if let actionError {
+            let item = NSMenuItem(title: actionError, action: nil, keyEquivalent: "")
+            item.isEnabled = false
+            menu.addItem(item); menu.addItem(.separator())
+        }
         let toggle = NSMenuItem(title: store.settings.shortcutsEnabled ? "Disable Shortcuts" : "Enable Shortcuts", action: #selector(toggleShortcuts), keyEquivalent: "")
         toggle.target = self; menu.addItem(toggle); menu.addItem(.separator())
         for action in WindowAction.allCases where !store.settings.hiddenActions.contains(action) {
@@ -67,14 +72,19 @@ import PaneGlideCore
     func menuWillOpen(_ menu: NSMenu) { capturedTarget = (try? windows.focusedWindow())?.id }
     @objc func performAction(_ sender: NSMenuItem) {
         guard let raw = sender.representedObject as? String, let action = WindowAction(rawValue: raw) else { return }
-        guard let capturedTarget else { feedback.show(WindowError.noWindow.localizedDescription, duration: 3); return }
+        guard let capturedTarget else {
+            actionError = WindowError.noWindow.localizedDescription
+            rebuildMenu()
+            return
+        }
         run(action, target: capturedTarget)
     }
     func run(_ action: WindowAction, target: String? = nil) {
         do {
-            let result = try commands.execute(action, target: target, settings: store.settings)
-            feedback.show(result.constrained ? "\(action.title): this app limited the requested size." : action.title, enabled: store.settings.showOverlay)
-        } catch { feedback.show(error.localizedDescription, duration: 5) }
+            _ = try commands.execute(action, target: target, settings: store.settings)
+            actionError = nil
+        } catch { actionError = error.localizedDescription }
+        rebuildMenu()
     }
     @objc func toggleShortcuts() {
         var value = store.settings; value.shortcutsEnabled.toggle()
@@ -90,12 +100,11 @@ import PaneGlideCore
             throw error
         }
         rebuildMenu()
-        if !value.showOverlay { feedback.hide() }
     }
     @objc private func resetPressedKeys() { shortcutCommands.resetPressedKeys() }
     func applicationWillTerminate(_ notification: Notification) {
         NSWorkspace.shared.notificationCenter.removeObserver(self)
-        hotkeys.stop(); feedback.hide()
+        hotkeys.stop()
     }
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool { showPreferences(); return true }
     @objc func showPreferences() {
@@ -114,13 +123,13 @@ import PaneGlideCore
         }
     }
     @objc func showHelp() {
-        showMessage("Choose Preferences to customize shortcuts, margins, partitions, Center size, and repeated Left/Right widths. Use Apply to save. Reopen PaneGlide from Finder if you hide its menu icon. SnapBack restores the window’s initial position and size before your sequence of actions. Only one window utility should use a given shortcut.")
+        NSWorkspace.shared.open(URL(string: "https://github.com/jpwinans/paneglide/blob/main/docs/usage.md")!)
     }
     @objc func showPermissionHelp() {
         if windows.trusted { showMessage("Accessibility access is enabled. PaneGlide can control supported application windows."); return }
         windows.requestPermission()
         NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility")!)
-        showMessage("Enable PaneGlide in Privacy & Security → Accessibility. If it is already enabled after replacing a development build, quit PaneGlide and reopen it from Finder. Use Refresh Access Status in preferences to check the actual result.")
+        showMessage("Enable PaneGlide in Privacy & Security → Accessibility. If it is already enabled after replacing a development build, quit PaneGlide and reopen it from Finder. Return to Preferences → General to check the access status.")
     }
     @objc func showRepository() {
         NSWorkspace.shared.open(URL(string: "https://github.com/jpwinans/paneglide")!)
@@ -193,7 +202,7 @@ extension WindowAction {
         case .upperRight: "Upper Right"
         case .lowerLeft: "Lower Left"
         case .lowerRight: "Lower Right"
-        case .maximize: "Full Screen"
+        case .maximize: "Maximize"
         case .center: "Center"
         case .previousMonitor: "Previous Monitor"
         case .nextMonitor: "Next Monitor"

@@ -26,7 +26,7 @@ and [batch examples](examples/batch.applescript); select one example at a time.
 | --- | --- |
 | Split | `Left`, `Right`, `Up`, `Down` |
 | Corners | `Upper Left`, `Upper Right`, `Lower Left`, `Lower Right` |
-| Size and restore | `Full Screen`, `Center`, `SnapBack` |
+| Size and restore | `Maximize`, `Center`, `SnapBack` |
 | Displays | `Prev Monitor`, `Next Monitor` |
 | Move without resizing | `Move Left`, `Move Right`, `Move Up`, `Move Down`, `Move Upper Left`, `Move Upper Right`, `Move Lower Left`, `Move Lower Right`, `Move Center` |
 | Thirds | `Third Left`, `Third Center`, `Third Right`, `Third Upper`, `Third Middle`, `Third Lower` |

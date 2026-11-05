@@ -1,7 +1,7 @@
 # PaneGlide
 
 PaneGlide is a native Apple silicon macOS menu bar app for moving and resizing windows
-with keyboard shortcuts. It supports halves, quarters, Center, Full Screen, monitor
+with keyboard shortcuts. It supports halves, quarters, Center, Maximize, monitor
 transfers, SnapBack, and configurable alternate Left and Right widths for ultrawide
 layouts.
 

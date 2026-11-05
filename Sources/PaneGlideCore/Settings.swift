@@ -46,8 +46,6 @@ public struct AppSettings: Codable, Equatable, Sendable {
     }
     public var menuVisible = true
     public var showPreferencesOnLaunch = false
-    public var showTooltips = true
-    public var showOverlay = true
     public var resizeProportionally = true
     public var centerConstrainedWindows = true
     public var keepInBounds = true
