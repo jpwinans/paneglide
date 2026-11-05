@@ -23,7 +23,9 @@ that configuration. An unreadable settings file is preserved as a recovery file
 in the same folder.
 
 SnapBack baselines and window references are held in memory and cleared when the
-app quits. The Accessibility grant and login registration are managed by macOS;
+app quits. The optional Quick Start check remembers the participating window only
+while the check is active; canceling or finishing clears that reference. Its progress
+is not exported or uploaded. The Accessibility grant and login registration are managed by macOS;
 they are not included in settings exports. A local macOS preference records whether
 Quick Start has been completed on this Mac.
 

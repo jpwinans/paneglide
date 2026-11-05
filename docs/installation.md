@@ -50,6 +50,13 @@ managers or disable their matching shortcuts before using PaneGlide.
 5. Choose **Start Using PaneGlide**. Focus a normal window in another app, then press
    **Control–Option–Command–Left**. Press **Control–Option–Command–/** to restore it.
 
+Quick Start also offers **Try Left → SnapBack**, an optional check using a normal
+window in another app. Start it, move the window Left, then use SnapBack on that
+same window and return to Quick Start. It confirms an actual move and restoration.
+If the window was already at Left, move it away before trying. Menu actions also
+work for this check. Cancel Check or closing Help stops the check; your normal
+SnapBack history remains available.
+
 You can reopen Quick Start from the menu or the **Quick Start…** button in
 **Preferences → General** at any time. Help includes **Edit Shortcuts…**,
 which opens the shortcut editor directly. PaneGlide does not need Screen Recording
