@@ -52,7 +52,6 @@ public struct AppSettings: Codable, Equatable, Sendable {
     public var centerConstrainedWindows = true
     public var keepInBounds = true
     public var accountForDrawers = true
-    public var automaticUpdateChecks = false
     public var hiddenActions: Set<WindowAction> = []
     public init() {}
     public func layout(for displayID: String) -> LayoutSettings { displayLayouts[displayID] ?? layout }

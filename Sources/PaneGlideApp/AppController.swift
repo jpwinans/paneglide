@@ -12,7 +12,6 @@ import PaneGlideCore
     let hotkeys = GlobalHotkeys()
     let login = LoginItem(system: NativeLoginSystem())
     let feedback = ActionFeedback(surface: NativeOverlay(), scheduler: NativeDelay())
-    let updates = UpdateManager()
     lazy var shortcutCommands = ShortcutCommands(system: hotkeys) { [weak self] action in self?.run(action) }
 
     func applicationDidFinishLaunching(_ notification: Notification) {
@@ -28,8 +27,6 @@ import PaneGlideCore
         if ProcessInfo.processInfo.arguments.contains("--integration-workflow-test") { runWorkflowTest(); return }
         if ProcessInfo.processInfo.arguments.contains("--integration-test") { runIntegrationTest(); return }
         #endif
-        updates.onUpdateFound = { [weak self] in self?.feedback.show("A PaneGlide update is available. Open Preferences → General.", duration: 5) }
-        updates.configure(automatic: store.settings.automaticUpdateChecks)
         hotkeys.onEvent = { [weak self] token, pressed in self?.shortcutCommands.receive(token: token, pressed: pressed) }
         NSWorkspace.shared.notificationCenter.addObserver(self, selector: #selector(resetPressedKeys), name: NSWorkspace.didWakeNotification, object: nil)
         NSWorkspace.shared.notificationCenter.addObserver(self, selector: #selector(resetPressedKeys), name: NSWorkspace.sessionDidBecomeActiveNotification, object: nil)
@@ -61,7 +58,7 @@ import PaneGlideCore
             if [.down, .lowerRight, .center, .snapBack].contains(action) { menu.addItem(.separator()) }
         }
         menu.addItem(.separator())
-        for (title, selector) in [("Preferences…", #selector(showPreferences)), ("Check for Updates…", #selector(checkUpdates)), ("Accessibility Access…", #selector(showPermissionHelp)), ("Help…", #selector(showHelp)), ("About PaneGlide…", #selector(showAbout))] {
+        for (title, selector) in [("Preferences…", #selector(showPreferences)), ("View on GitHub…", #selector(showRepository)), ("Accessibility Access…", #selector(showPermissionHelp)), ("Help…", #selector(showHelp)), ("About PaneGlide…", #selector(showAbout))] {
             let item = NSMenuItem(title: title, action: selector, keyEquivalent: ""); item.target = self; menu.addItem(item)
         }
         let quit = NSMenuItem(title: "Quit PaneGlide", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"); quit.target = NSApp; menu.addItem(quit)
@@ -94,7 +91,6 @@ import PaneGlideCore
         }
         rebuildMenu()
         if !value.showOverlay { feedback.hide() }
-        updates.configure(automatic: value.automaticUpdateChecks)
     }
     @objc private func resetPressedKeys() { shortcutCommands.resetPressedKeys() }
     func applicationWillTerminate(_ notification: Notification) {
@@ -120,12 +116,14 @@ import PaneGlideCore
     @objc func showHelp() {
         showMessage("Choose Preferences to customize shortcuts, margins, partitions, Center size, and repeated Left/Right widths. Use Apply to save. Reopen PaneGlide from Finder if you hide its menu icon. SnapBack restores the window’s initial position and size before your sequence of actions. Only one window utility should use a given shortcut.")
     }
-    @objc func checkUpdates() { showPreferences(); updates.check() }
     @objc func showPermissionHelp() {
         if windows.trusted { showMessage("Accessibility access is enabled. PaneGlide can control supported application windows."); return }
         windows.requestPermission()
         NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility")!)
         showMessage("Enable PaneGlide in Privacy & Security → Accessibility. If it is already enabled after replacing a development build, quit PaneGlide and reopen it from Finder. Use Refresh Access Status in preferences to check the actual result.")
+    }
+    @objc func showRepository() {
+        NSWorkspace.shared.open(URL(string: "https://github.com/jpwinans/paneglide")!)
     }
     @objc func showAbout() {
         NSApp.activate(ignoringOtherApps: true)
