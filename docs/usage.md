@@ -85,7 +85,7 @@ not included in settings exports.
 ## Menu and preferences
 
 The menu offers the same positioning actions, shortcut enable/disable, Preferences,
-update checking, Accessibility help, Help, About, and Quit. Hidden actions can be
+View on GitHub, Accessibility help, Help, About, and Quit. Hidden actions can be
 restored through the Shortcuts tab's **Show in menu** controls.
 
 To stop shortcuts temporarily, choose **Disable Shortcuts** in the menu. Menu and
@@ -104,7 +104,6 @@ Reopening PaneGlide from Finder shows Preferences, including when its icon is hi
 | Changes disappear when Preferences closes | Choose Apply to save edits; the login switch takes effect immediately |
 | A monitor uses unexpected sizes | Check Display settings and whether that monitor has a separate profile |
 | The menu icon is missing | Reopen PaneGlide from Finder and enable Show PaneGlide in menu bar, then Apply |
-| An update check fails | Check the network connection or retry after GitHub’s request limit resets; see [Updates](updates.md) |
 
 PaneGlide does not move windows between macOS Spaces. It positions windows on the
 available displays and can arrange multiple windows through [AppleScript](scripting.md).

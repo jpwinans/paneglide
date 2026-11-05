@@ -103,7 +103,6 @@ struct PreferencesView: View {
                 Toggle("Show tooltips", isOn: $model.draft.showTooltips)
                 Toggle("Show visual action overlay", isOn: $model.draft.showOverlay)
             }
-            Section("Updates") { UpdatePreferences(updates: model.controller.updates, automatic: $model.draft.automaticUpdateChecks) }
         }.formStyle(.grouped)
     }
     private var loginDescription: String {

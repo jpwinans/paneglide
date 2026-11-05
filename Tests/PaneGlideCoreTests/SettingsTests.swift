@@ -104,7 +104,6 @@ import PaneGlideCore
     value.showTooltips = false; value.showOverlay = false
     value.resizeProportionally = false; value.centerConstrainedWindows = false
     value.keepInBounds = false; value.accountForDrawers = false
-    value.automaticUpdateChecks = true
     value.layout.splitX = 0.6; value.layout.splitY = 0.4
     value.layout.quarterX = 0.3; value.layout.quarterY = 0.7
     value.layout.margins.enabled = false; value.layout.margins.left = 10
@@ -163,4 +162,32 @@ import PaneGlideCore
     #expect(throws: (any Error).self) { try store.update(changed) }
     #expect(store.settings == AppSettings())
     #expect(try Data(contentsOf: url) == original)
+}
+
+@Test func retiredOptionsDoNotInvalidateSavedLayouts() throws {
+    let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+    defer { try? FileManager.default.removeItem(at: directory) }
+    let url = directory.appendingPathComponent("settings.json")
+    var expected = AppSettings()
+    expected.layout.centerWidth = Dimension(58)
+    expected.layout.alternateLeft.enabled = true
+    expected.layout.alternateLeft.width = Dimension(21)
+    expected.displayLayouts["external"] = expected.layout
+    expected.shortcuts = [.left: Shortcut(0, modifiers: 5)]
+    let retiredOptions = ["automaticUpdateChecks"]
+    var document = try #require(JSONSerialization.jsonObject(with: JSONEncoder().encode(expected)) as? [String: Any])
+    for key in retiredOptions { document[key] = true }
+    let legacyData = try JSONSerialization.data(withJSONObject: document)
+    try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+    try legacyData.write(to: url)
+
+    let store = try SettingsStore(url: url)
+    #expect(store.recoveryNotice == nil)
+    #expect(store.settings.layout == expected.layout)
+    #expect(store.settings.displayLayouts == expected.displayLayouts)
+    #expect(store.settings.shortcuts == expected.shortcuts)
+    try store.importData(legacyData)
+    let exported = try #require(JSONSerialization.jsonObject(with: store.exportData()) as? [String: Any])
+    for key in retiredOptions { #expect(exported[key] == nil) }
+    #expect(try SettingsStore(url: url).settings.layout == expected.layout)
 }

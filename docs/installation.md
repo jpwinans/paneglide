@@ -15,8 +15,9 @@ When a `PaneGlide.zip` package is available on [Releases](https://github.com/jpw
 Keep the app in that location so startup registration and future updates use the
 same installation. The app appears in the menu bar rather than keeping a Dock icon.
 
-For an existing installation, use [Install Downloaded App](updates.md#install-an-update)
-to install a newer signed package.
+For an existing installation, quit PaneGlide and replace the complete app in the
+same location using Finder. Keep a copy of the previous app until the new version
+works. Saved settings are stored separately and survive app replacement.
 
 Disable matching shortcuts in other window utilities before enabling PaneGlide's
 shortcuts, so only one app responds to each key combination.
@@ -69,9 +70,9 @@ existing copy before replacing it. The app opens in the menu bar; finish the
 [Accessibility setup](#enable-accessibility) before trying shortcuts.
 
 The default local build is ad-hoc signed and needs no developer account. macOS may
-require you to remove and re-add its Accessibility entry after rebuilding. It
-cannot use the signed-update installer. You can continue updating local builds
-with the same build and installation steps.
+require you to remove and re-add its Accessibility entry after rebuilding. You can update local builds with the same build and installation steps after
+fetching the new source. Quit PaneGlide and replace the complete installed bundle
+in Finder to avoid retaining files from the previous build.
 
 For a stable development signature, list your available identities and select
 one in your shell before building:
@@ -85,7 +86,7 @@ CONFIGURATION=release bash scripts/build-app.sh
 The build produces `dist/PaneGlide.app`, includes the GPL license, enables hardened
 runtime, and verifies the plist, arm64 architecture, and signature. An Apple
 Development signature is suitable for your local installation; a public download
-requires Developer ID signing and notarization. See [release packaging](updates.md#build-a-release-package).
+requires Developer ID signing and notarization. See [release packaging](releasing.md#build-a-release-package).
 
 Omit `CONFIGURATION=release` for a debug build with native fixture test controls.
 Set `PANEGLIDE_VERSION=major.minor.patch` to override the version in `Resources/Info.plist`.

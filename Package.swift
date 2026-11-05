@@ -4,12 +4,10 @@ import PackageDescription
 let package = Package(
     name: "PaneGlide",
     platforms: [.macOS(.v14)],
-    products: [.executable(name: "PaneGlide", targets: ["PaneGlideApp"]), .executable(name: "UpdateAcceptance", targets: ["UpdateAcceptance"])],
+    products: [.executable(name: "PaneGlide", targets: ["PaneGlideApp"])],
     targets: [
         .target(name: "PaneGlideCore"),
-        .target(name: "PaneGlidePlatform", dependencies: ["PaneGlideCore"]),
-        .executableTarget(name: "PaneGlideApp", dependencies: ["PaneGlideCore", "PaneGlidePlatform"]),
-        .executableTarget(name: "UpdateAcceptance", dependencies: ["PaneGlideCore", "PaneGlidePlatform"], path: "Tools/UpdateAcceptance"),
+        .executableTarget(name: "PaneGlideApp", dependencies: ["PaneGlideCore"]),
         .testTarget(name: "PaneGlideCoreTests", dependencies: ["PaneGlideCore"])
     ]
 )

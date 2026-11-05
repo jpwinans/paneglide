@@ -31,7 +31,7 @@ Choose **Apply** to save preference edits.
 - [Configuration](docs/configuration.md): every preference, display profiles, and settings backup.
 - [Usage](docs/usage.md): default shortcuts, ultrawide layouts, monitor moves, and troubleshooting.
 - [AppleScript](docs/scripting.md): commands, custom layouts, and batch arrangements.
-- [Updates](docs/updates.md): optional public release checks, installation, and packaging.
+- [Release packaging](docs/releasing.md): signing and packaging for maintainers.
 - [Tests](Tests/README.md): local checks and native window tests.
 
 ## License
@@ -43,10 +43,9 @@ Copyright (c) 2026 jpwinans. PaneGlide is licensed under the
 
 | Directory | Contents |
 | --- | --- |
-| `Sources/PaneGlideCore/` | Geometry, window commands, settings, shortcuts, and update logic |
-| `Sources/PaneGlidePlatform/` | Native app signature verification |
+| `Sources/PaneGlideCore/` | Geometry, window commands, settings, and shortcuts |
 | `Sources/PaneGlideApp/` | Menu bar app, preferences, Accessibility, and macOS services |
-| `Tools/` | Disposable window fixture and update test helper |
+| `Tools/` | Disposable window fixture |
 | `Tests/` | Automated tests and native test instructions |
 | `docs/` | Installation, configuration, usage, and scripting guides |
 

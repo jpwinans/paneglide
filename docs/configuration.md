@@ -18,7 +18,6 @@ part of the preference draft.
 | Show PaneGlide in menu bar | Shows or hides the status icon; reopen the app from Finder to recover Preferences when hidden |
 | Show tooltips | Enables explanatory help on supported controls |
 | Show visual action overlay | Briefly shows action feedback; errors still display useful messages |
-| Check for updates automatically (daily) | Enables optional public GitHub release checks; see [Updates](updates.md) |
 
 ## Shortcuts
 
