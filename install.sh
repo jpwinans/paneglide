@@ -4,14 +4,14 @@ set -euo pipefail
 project_root="$(cd "$(dirname "$0")" && pwd)"
 applications_directory="$HOME/Applications"
 built_app=''
-launch_options=()
+launch_option=""
 while [[ $# -gt 0 ]]; do
     case "$1" in
         --applications-dir|--app)
             [[ $# -ge 2 && -n "$2" ]] || { echo "$1 requires a path." >&2; exit 2; }
             if [[ "$1" == --applications-dir ]]; then applications_directory="$2"; else built_app="$2"; fi
             shift 2 ;;
-        --no-launch) launch_options=(--no-launch); shift ;;
+        --no-launch) launch_option=--no-launch; shift ;;
         --help|-h)
             cat <<'HELP'
 Usage: bash install.sh [options]
@@ -59,4 +59,4 @@ if [[ -z "$built_app" ]]; then
     CONFIGURATION=release bash "$project_root/scripts/build-app.sh"
     built_app="$project_root/dist/PaneGlide.app"
 fi
-/usr/bin/python3 "$project_root/scripts/install-app.py" --app "$built_app" --applications-dir "$applications_directory" "${launch_options[@]}"
+/usr/bin/python3 "$project_root/scripts/install-app.py" --app "$built_app" --applications-dir "$applications_directory" ${launch_option:+"$launch_option"}

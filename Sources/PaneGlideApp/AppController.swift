@@ -9,6 +9,9 @@ import PaneGlideCore
     var statusItem: NSStatusItem?
     var capturedTarget: String?
     var preferencesWindow: NSWindow?
+    var helpWindow: NSWindow?
+    var helpModel: HelpModel?
+    let setup = SetupProgress()
     let hotkeys = GlobalHotkeys()
     let login = LoginItem(system: NativeLoginSystem())
     private var actionError: String?
@@ -33,11 +36,10 @@ import PaneGlideCore
         do { try shortcutCommands.apply(store.settings.shortcuts, enabled: store.settings.shortcutsEnabled) }
         catch { showError(error) }
         if let message = store.recoveryNotice { showMessage(message) }
-        if !windows.trusted && !UserDefaults.standard.bool(forKey: "accessibilityExplained") {
-            UserDefaults.standard.set(true, forKey: "accessibilityExplained")
-            showPermissionHelp()
-        }
-        if store.settings.showPreferencesOnLaunch || ProcessInfo.processInfo.arguments.contains("--preferences") { showPreferences() }
+        NotificationCenter.default.addObserver(self, selector: #selector(refreshAccessStatus), name: NSApplication.didBecomeActiveNotification, object: nil)
+        let needsSetup = setup.shouldPresent(accessibilityGranted: windows.trusted, hasSavedSettings: FileManager.default.fileExists(atPath: store.url.path) && store.recoveryNotice == nil)
+        if needsSetup { showPermissionHelp() }
+        else if store.settings.showPreferencesOnLaunch || ProcessInfo.processInfo.arguments.contains("--preferences") { showPreferences() }
     }
     func rebuildMenu() {
         if !store.settings.menuVisible {
@@ -49,8 +51,8 @@ import PaneGlideCore
         statusItem?.button?.image = NSImage(systemSymbolName: "rectangle.split.3x1", accessibilityDescription: "PaneGlide")
         statusItem?.button?.toolTip = "PaneGlide"
         let menu = NSMenu(); menu.delegate = self
-        if let actionError {
-            let item = NSMenuItem(title: actionError, action: nil, keyEquivalent: "")
+        if let status = !windows.trusted ? "Accessibility access needed — open Quick Start" : actionError {
+            let item = NSMenuItem(title: status, action: nil, keyEquivalent: "")
             item.isEnabled = false
             menu.addItem(item); menu.addItem(.separator())
         }
@@ -63,7 +65,7 @@ import PaneGlideCore
             if [.down, .lowerRight, .center, .snapBack].contains(action) { menu.addItem(.separator()) }
         }
         menu.addItem(.separator())
-        for (title, selector) in [("Preferences…", #selector(showPreferences)), ("View on GitHub…", #selector(showRepository)), ("Accessibility Access…", #selector(showPermissionHelp)), ("Help…", #selector(showHelp)), ("About PaneGlide…", #selector(showAbout))] {
+        for (title, selector) in [("Preferences…", #selector(showPreferences)), ("View on GitHub…", #selector(showRepository)), ("Quick Start…", #selector(showPermissionHelp)), ("Help…", #selector(showHelp)), ("About PaneGlide…", #selector(showAbout))] {
             let item = NSMenuItem(title: title, action: selector, keyEquivalent: ""); item.target = self; menu.addItem(item)
         }
         let quit = NSMenuItem(title: "Quit PaneGlide", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"); quit.target = NSApp; menu.addItem(quit)
@@ -99,14 +101,21 @@ import PaneGlideCore
             try? shortcutCommands.apply(store.settings.shortcuts, enabled: store.settings.shortcutsEnabled)
             throw error
         }
+        helpModel?.refresh()
         rebuildMenu()
     }
+    @objc private func refreshAccessStatus() { rebuildMenu() }
     @objc private func resetPressedKeys() { shortcutCommands.resetPressedKeys() }
     func applicationWillTerminate(_ notification: Notification) {
         NSWorkspace.shared.notificationCenter.removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
         hotkeys.stop()
     }
-    func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool { showPreferences(); return true }
+    func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
+        if helpWindow?.isVisible == true { NSApp.activate(ignoringOtherApps: true); helpWindow?.makeKeyAndOrderFront(nil) }
+        else { showPreferences() }
+        return true
+    }
     @objc func showPreferences() {
         if preferencesWindow == nil {
             let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 840, height: 700), styleMask: [.titled, .closable, .resizable, .miniaturizable], backing: .buffered, defer: false)
@@ -117,19 +126,26 @@ import PaneGlideCore
         NSApp.activate(ignoringOtherApps: true); preferencesWindow?.makeKeyAndOrderFront(nil)
     }
     func windowWillClose(_ notification: Notification) {
+        if let window = notification.object as? NSWindow, window === helpWindow {
+            helpWindow = nil; helpModel = nil
+        }
         if let window = notification.object as? NSWindow, window === preferencesWindow {
             preferencesWindow = nil
             do { try shortcutCommands.apply(store.settings.shortcuts, enabled: store.settings.shortcutsEnabled) } catch { showError(error) }
         }
     }
-    @objc func showHelp() {
-        NSWorkspace.shared.open(URL(string: "https://github.com/jpwinans/paneglide/blob/main/docs/usage.md")!)
-    }
-    @objc func showPermissionHelp() {
-        if windows.trusted { showMessage("Accessibility access is enabled. PaneGlide can control supported application windows."); return }
-        windows.requestPermission()
-        NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility")!)
-        showMessage("Enable PaneGlide in Privacy & Security → Accessibility. If it is already enabled after replacing a development build, quit PaneGlide and reopen it from Finder. Return to Preferences → General to check the access status.")
+    @objc func showHelp() { showGuide(.guide) }
+    @objc func showPermissionHelp() { showGuide(.setup) }
+    private func showGuide(_ page: HelpModel.Page) {
+        if helpWindow == nil {
+            let model = HelpModel(controller: self, page: page)
+            let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 660, height: 680), styleMask: [.titled, .closable, .resizable, .miniaturizable], backing: .buffered, defer: false)
+            window.title = "PaneGlide Help"; window.isReleasedWhenClosed = false; window.delegate = self
+            window.contentView = NSHostingView(rootView: HelpView(model: model))
+            window.center(); helpWindow = window; helpModel = model
+        }
+        helpModel?.page = page; helpModel?.refresh()
+        NSApp.activate(ignoringOtherApps: true); helpWindow?.makeKeyAndOrderFront(nil)
     }
     @objc func showRepository() {
         NSWorkspace.shared.open(URL(string: "https://github.com/jpwinans/paneglide")!)

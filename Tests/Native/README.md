@@ -76,3 +76,18 @@ short run. The output is `.build/native-scripting-result.json`.
 These tests supplement interactive checks of physical shortcuts, menu targeting,
 preference controls, and the applications you use. A blocked or constrained test
 needs inspection rather than being treated as a successful layout.
+
+## Setup and help
+
+On a fresh user account, start the installed app and check that Quick Start appears
+without opening System Settings until requested. Accessibility status must reflect
+the actual grant when returning from System Settings; Start Using PaneGlide is
+available only after access is granted. Closing setup without completing it should
+leave it available on the next launch. Existing configured installations with
+Accessibility access should start quietly.
+
+Open Quick Start and Help from the menu. Check all three tabs, scroll the guide,
+and confirm Your Shortcuts matches saved custom bindings. Check that opening
+Preferences from Help works and that Help remains usable offline. Login changes
+should reflect the macOS registration result. Do not revoke an everyday
+installation's permission just to exercise a fresh-user case.
